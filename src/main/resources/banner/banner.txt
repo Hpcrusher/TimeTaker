@@ -1,0 +1,6 @@
+
+${AnsiColor.CYAN}  _______                 ${AnsiColor.YELLOW}  ______      __
+${AnsiColor.CYAN} /_  __(_)___ ___  ___    ${AnsiColor.YELLOW} /_  __/___ _/ /_____  _____
+${AnsiColor.CYAN}  / / / / __ `__ \/ _ \   ${AnsiColor.YELLOW}  / / / __ `/ //_/ _ \/ ___/
+${AnsiColor.CYAN} / / / / / / / / /  __/   ${AnsiColor.YELLOW} / / / /_/ / ,< /  __/ /
+${AnsiColor.CYAN}/_/ /_/_/ /_/ /_/\___/    ${AnsiColor.YELLOW}/_/  \__,_/_/|_|\___/_/
