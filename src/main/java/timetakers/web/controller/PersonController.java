@@ -16,7 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import timetakers.model.Person;
+import timetakers.model.User;
 import timetakers.repository.PersonRepository;
+import timetakers.repository.UserRepository;
 import timetakers.web.assembler.PersonAssembler;
 import timetakers.web.model.PersonDto;
 
@@ -34,18 +36,23 @@ import java.util.UUID;
 public class PersonController {
 
     private PersonRepository personRepository;
+    private UserRepository userRepository;
     private PersonAssembler personAssembler;
 
     @Autowired
-    public PersonController(PersonRepository personRepository, PersonAssembler personAssembler) {
+    public PersonController(PersonRepository personRepository, UserRepository userRepository, PersonAssembler personAssembler) {
         this.personRepository = personRepository;
+        this.userRepository = userRepository;
         this.personAssembler = personAssembler;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
-    public void createPerson(@RequestParam String name) {
-        personRepository.save(Person.builder().setName(name).createPerson());
+    public void createPerson(@RequestParam String name, @RequestParam String username, @RequestParam String password) {
+        Person person = Person.builder().setName(name).createPerson();
+        personRepository.save(person);
+        User user = User.builder().setPerson(person).setUserName(username).setPassword(password).createUser();
+        userRepository.save(user);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

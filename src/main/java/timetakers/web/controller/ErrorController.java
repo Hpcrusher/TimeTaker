@@ -10,11 +10,14 @@
 
 package timetakers.web.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author David Liebl
@@ -25,8 +28,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class ErrorController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getErrorPageAsHtml() {
-        return new ModelAndView("error");
+    public ModelAndView getErrorPageAsHtml(HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        modelAndView.addObject("code", statusCode);
+        modelAndView.addObject("description", HttpStatus.valueOf(statusCode).getReasonPhrase());
+        return modelAndView;
     }
 
 }

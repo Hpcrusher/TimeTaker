@@ -34,6 +34,10 @@ public abstract class AbstractIdEntity {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     @Transient
     public String getIdString() {
         return id != null ? id.toString() : null;

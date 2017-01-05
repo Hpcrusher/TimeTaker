@@ -10,11 +10,18 @@
 
 package timetakers.web.controller;
 
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import timetakers.model.Person;
+import timetakers.model.User;
+import timetakers.repository.PersonRepository;
+import timetakers.repository.UserRepository;
+import timetakers.web.assembler.PersonAssembler;
 
 /**
  * @author David Liebl
@@ -22,12 +29,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @Transactional
-@RequestMapping(value = "/")
-public class HomeController {
+@RequestMapping(value = "/signup")
+public class RegistrationController {
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getHomeAsHtml() {
-        return "home";
+    private PersonRepository personRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    public RegistrationController(PersonRepository personRepository, UserRepository userRepository, PersonAssembler personAssembler) {
+        this.personRepository = personRepository;
+        this.userRepository = userRepository;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public void createPerson(@RequestParam String name, @RequestParam String username, @RequestParam String password) {
+        Person person = Person.builder().setName(name).createPerson();
+        personRepository.save(person);
+        User user = User.builder().setPerson(person).setUserName(username).setPassword(password).createUser();
+        userRepository.save(user);
     }
 
 }

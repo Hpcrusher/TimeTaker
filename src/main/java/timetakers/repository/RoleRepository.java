@@ -8,26 +8,20 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.repository;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+import timetakers.model.Role;
+
+import java.util.UUID;
 
 /**
  * @author David Liebl
  */
 
-@Controller
-@Transactional
-@RequestMapping(value = "/")
-public class HomeController {
-
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getHomeAsHtml() {
-        return "home";
-    }
+@Repository
+public interface RoleRepository extends JpaRepository<Role, UUID>, JpaSpecificationExecutor<Role> {
 
 }

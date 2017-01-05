@@ -57,7 +57,11 @@ public class UuidType implements UserType, Serializable {
 
     @Override
     public void nullSafeSet(PreparedStatement preparedStatement, Object o, int i, SessionImplementor sessionImplementor) throws HibernateException, SQLException {
-        preparedStatement.setString(i, ((UUID)o).toString());
+        if (o == null) {
+            preparedStatement.setString(i, null);
+        } else {
+            preparedStatement.setString(i, ((UUID)o).toString());
+        }
     }
 
     @Override

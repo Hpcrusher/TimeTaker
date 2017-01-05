@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  -->
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head" th:remove="tag">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><!-- for Bootstrap -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/><!-- for Bootstrap -->
+    <script th:attr="data-main=@{js/requireConfig.js}" th:src="@{js/3rd/require.min.js}"></script>
+    <script th:src="@{js/require.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/3rd/bootstrap.min.css}"/>
+    <script th:inline="javascript">
+        requireDomReady(['jquery', 'bootstrap'], function ($) {
+            $('#logoutBtn').click(function () {
+//                var csrfParameterName = /*[[${_csrf.parameterName}}]]*/'';
+//                var csrfValue = /*[[${_csrf.token}]]*/'';
+//                $.ajax({
+//                    url: /*[[@{/logout}]]*/'',
+//                    data:{
+//                        csrfParameterName: csrfValue
+//                    },
+//                    method: 'POST'
+//                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div th:fragment="header">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Timetaker</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a class="navbar-right" >Projekt hinzufügen</a></li>
+                    <li><a class="navbar-right" >Neue Aufgabe</a></li>
+                    <li><a class="navbar-right" >Zusammenfassung</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" id="logoutBtn" class="btn btn-link"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

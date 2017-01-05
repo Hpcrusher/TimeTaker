@@ -9,12 +9,15 @@
   ~
   -->
 
-<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorator="layouts/plain">
 <head>
-    <meta charset="UTF-8"></meta>
-    <title>Time Taker: Error</title>
+    <title th:text="${code}"></title>
 </head>
 <body>
-    <h2>Es ist ein Fehler aufgetreten</h2>
+    <div layout:fragment="content">
+        <h2><span th:text="${code}">status code</span><span th:text="${description}"></span></h2>
+    </div>
 </body>
 </html>

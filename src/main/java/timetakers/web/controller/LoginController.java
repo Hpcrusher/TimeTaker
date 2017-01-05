@@ -11,23 +11,32 @@
 package timetakers.web.controller;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import timetakers.security.CustomUserDetails;
 
 /**
  * @author David Liebl
  */
 
 @Controller
-@Transactional
-@RequestMapping(value = "/")
-public class HomeController {
+public class LoginController {
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getHomeAsHtml() {
-        return "home";
+    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public String getLoginAsHtml() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        boolean authenticated = false;
+        Object principal = securityContext.getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            authenticated = ((CustomUserDetails)principal).getId() != null;
+        }
+        if (authenticated) {
+            return "redirect:/";
+        }
+        return "login";
     }
 
 }

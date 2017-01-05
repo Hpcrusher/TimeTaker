@@ -19,8 +19,60 @@
 
     <changeSet id="1.0-1" author="DAL">
         <createTable tableName="person">
-            <column name="id" type="${type.id}"/>
-            <column name="name" type="VARCHAR(100)"/>
+            <column name="id" type="${type.id}">
+                <constraints primaryKey="true" primaryKeyName="person_pk" nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="${type.string-100}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0-2" author="DAL">
+        <createTable tableName="user">
+            <column name="id" type="${type.id}">
+                <constraints primaryKey="true" primaryKeyName="user_pk" nullable="false" unique="true"/>
+            </column>
+            <column name="username" type="${type.string-100}">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="${type.string-100}"/>
+            <column name="enabled" type="BOOLEAN"/>
+            <column name="person_id" type="${type.id}">
+                <constraints referencedTableName="person" referencedColumnNames="id" foreignKeyName="user_person_fk"
+                             nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0-3" author="DAL">
+        <createTable tableName="role">
+            <column name="id" type="${type.id}">
+                <constraints primaryKey="true" primaryKeyName="role_pk" nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="${type.string-100}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0-3a" author="DAL">
+        <insert tableName="role">
+            <column name="id" value="ae14b6cf-f993-43d5-834a-7d7aa86eb874"/>
+            <column name="name" value="USER"/>
+        </insert>
+        <insert tableName="role">
+            <column name="id" value="6a90eb4a-2f05-4f64-a3fb-581c518269c9"/>
+            <column name="name" value="ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0-4" author="DAL">
+        <createTable tableName="user_has_role">
+            <column name="role_id" type="${type.id}">
+                <constraints primaryKey="true" primaryKeyName="user_has_role_pk" nullable="false" referencedTableName="role"
+                             referencedColumnNames="id" foreignKeyName="user_has_role_role_fk"/>
+            </column>
+            <column name="user_id" type="${type.id}">
+                <constraints primaryKey="true" primaryKeyName="user_has_role_pk" nullable="false" referencedTableName="user"
+                             referencedColumnNames="id" foreignKeyName="user_has_role_user_fk"/>
+            </column>
         </createTable>
     </changeSet>
 

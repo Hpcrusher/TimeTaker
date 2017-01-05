@@ -8,26 +8,9 @@
  *
  */
 
-package timetakers.web.controller;
-
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-/**
- * @author David Liebl
- */
-
-@Controller
-@Transactional
-@RequestMapping(value = "/")
-public class HomeController {
-
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getHomeAsHtml() {
-        return "home";
-    }
-
+function requireDomReady(dependencies, callback) {
+    require(['requireConfig'], function () {
+        dependencies.push('domReady!');
+        require(dependencies, callback);
+    });
 }

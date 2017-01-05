@@ -8,26 +8,19 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.util;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * @author David Liebl
  */
+public class EncryptPassword {
 
-@Controller
-@Transactional
-@RequestMapping(value = "/")
-public class HomeController {
+    private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getHomeAsHtml() {
-        return "home";
+    public static String encrypt(String password) {
+        return passwordEncoder.encode(password);
     }
 
 }

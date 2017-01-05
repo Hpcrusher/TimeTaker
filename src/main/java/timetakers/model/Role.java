@@ -8,26 +8,40 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.model;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author David Liebl
  */
 
-@Controller
-@Transactional
-@RequestMapping(value = "/")
-public class HomeController {
+@Entity
+@Table(name = "role")
+public class Role extends AbstractIdEntity{
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getHomeAsHtml() {
-        return "home";
+    @Column(name = "name")
+    private String name;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+    private Set<User> users;
+
+    public Role() {}
+
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 }

@@ -29,19 +29,6 @@ public class Person extends AbstractIdEntity {
     public Person() {
     }
 
-    public Person(UUID id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -69,7 +56,10 @@ public class Person extends AbstractIdEntity {
         }
 
         public Person createPerson() {
-            return new Person(id, name);
+            Person person = new Person();
+            person.setId(id);
+            person.setName(name);
+            return person;
         }
     }
 
