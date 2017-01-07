@@ -38,14 +38,28 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Timetaker</a>
+                    <a class="navbar-brand" th:href="@{/}">Timetaker</a>
                 </div>
                 <ul class="nav navbar-nav">
-                    <li><a class="navbar-right" >Projekt hinzufügen</a></li>
-                    <li><a class="navbar-right" >Neue Aufgabe</a></li>
-                    <li><a class="navbar-right" >Zusammenfassung</a></li>
+                    <li><a class="navbar-right" th:text="#{navbar.newProject}">Projekt hinzufügen</a></li>
+                    <li><a class="navbar-right" th:text="#{navbar.newItem}">New Item</a></li>
+                    <li><a class="navbar-right" th:text="#{navbar.summary}">Summary</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <span th:text="#{global.language}">Language</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <a th:href="@{?mylocale=en_US}">English</a>
+                            </li>
+                            <li>
+                                <a th:href="@{?mylocale=de_DE}">German</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li>
                         <form th:action="@{/logout}" method="post">
                             <button type="submit" id="logoutBtn" class="btn btn-link"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
