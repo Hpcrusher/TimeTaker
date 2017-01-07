@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
+ * Copyright (c) 2017 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -27,16 +27,20 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public String getLoginAsHtml() {
+        if (isAuthenticated()) {
+            return "redirect:/";
+        }
+        return "login";
+    }
+
+    private boolean isAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         boolean authenticated = false;
         Object principal = securityContext.getAuthentication().getPrincipal();
         if (principal instanceof CustomUserDetails) {
             authenticated = ((CustomUserDetails)principal).getId() != null;
         }
-        if (authenticated) {
-            return "redirect:/";
-        }
-        return "login";
+        return authenticated;
     }
 
 }

@@ -8,21 +8,46 @@
  *
  */
 
-requirejs.config({
-    baseUrl: 'js',
-    wrapShim: true,
-    paths: {
-        //require.js plugins
-        domReady: '3rd/domReady.min',
+define('connector',['jquery'], function($){
 
-        // 3rd party
-        jquery: '3rd/jquery-3.1.1.min',
-        bootstrap: '3rd/bootstrap.min',
-        connnector: 'connector'
-    },
-    shim: {
-        jquery: { "exports": "$"},
-        bootstrap: ['jquery'],
-        connector: ['jquery']
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
+    function ajaxRequest(method, options) {
+        $.ajax({
+            url: options.url,
+            method: method,
+            data: options.data,
+            success: options.success,
+            error: options.error
+
+        });
     }
+
+    var _put = function (options) {
+        ajaxRequest('PUT', options);
+    };
+
+    var _delete = function (options) {
+        ajaxRequest('DELETE', options);
+    };
+
+    var _get = function (options) {
+        ajaxRequest('GET', options);
+    };
+
+    var _post = function (options) {
+        ajaxRequest('POST', options);
+    };
+
+    return {
+        put: _put,
+        delete: _delete,
+        get: _get,
+        post: _post
+    };
 });
