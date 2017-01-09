@@ -1,0 +1,11 @@
+/*
+    header-Pointer-config in navbar
+    @author Volker Mertens
+    @version 1.0
+ */
+a{
+
+}
+.headerPointer{
+    cursor:pointer;
+}

@@ -31,6 +31,7 @@
             });
         });
     </script>
+    <link rel="stylesheet" th:href="@{/css/head.css}"/>
 </head>
 <body>
     <div th:fragment="header">
@@ -40,13 +41,13 @@
                     <a class="navbar-brand" th:href="@{/}">Timetaker</a>
                 </div>
                 <ul class="nav navbar-nav">
-                    <li><a class="navbar-right" th:text="#{navbar.newProject}">Projekt hinzufügen</a></li>
-                    <li><a class="navbar-right" th:text="#{navbar.newItem}">New Item</a></li>
-                    <li><a class="navbar-right" th:text="#{navbar.summary}">Summary</a></li>
+                    <li><a class="navbar-right headerPointer" th:text="#{navbar.newProject}">Add Project</a></li>
+                    <li><a class="navbar-right headerPointer" th:text="#{navbar.newItem}">New Item</a></li>
+                    <li><a class="navbar-right headerPointer" th:text="#{navbar.summary}">Summary</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <span th:text="#{global.language}">Language</span>
                             <span class="caret"></span>
                         </a>
@@ -60,7 +61,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a id="logoutBtn"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                        <a id="logoutBtn" class="headerPointer"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
                     </li>
                 </ul>
             </div>
