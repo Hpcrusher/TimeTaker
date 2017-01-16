@@ -84,4 +84,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1.0-6" author="DAL">
+        <createTable tableName="record">
+            <column name="id" type="${type.id}"/>
+            <column name="item" type="${type.id}"/>
+            <column name="comment" type="${type.string-200}"/>
+            <column name="start_time" type="${type.datetime}"/>
+            <column name="end_time" type="${type.datetime}"/>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

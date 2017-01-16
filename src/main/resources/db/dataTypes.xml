@@ -24,4 +24,8 @@
     <property name="type.string-200" value="VARCHAR(200)"/>
     <property name="type.string-1000" value="VARCHAR(1000)"/>
 
+    <property name="type.date" value="BIGINT"/>
+    <property name="type.datetime" value="BIGINT"/>
+    <property name="type.time" value="BIGINT"/>
+
 </databaseChangeLog>
