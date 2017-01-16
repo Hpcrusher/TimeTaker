@@ -26,6 +26,9 @@ public class Person extends AbstractIdEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "firstname")
+    private String firstName;
+
     public Person() {
     }
 
@@ -37,6 +40,14 @@ public class Person extends AbstractIdEntity {
         this.name = name;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -44,6 +55,7 @@ public class Person extends AbstractIdEntity {
     public static class Builder {
         private UUID id = UUID.randomUUID();
         private String name;
+        private String firstname;
 
         public Builder setId(UUID id) {
             this.id = id;
@@ -55,10 +67,16 @@ public class Person extends AbstractIdEntity {
             return this;
         }
 
+        public Builder setFirstname(String firstname) {
+            this.firstname = firstname;
+            return this;
+        }
+
         public Person createPerson() {
             Person person = new Person();
             person.setId(id);
             person.setName(name);
+            person.setFirstName(firstname);
             return person;
         }
     }

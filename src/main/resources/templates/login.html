@@ -16,20 +16,41 @@
     <title th:text="#{login.title}">Login</title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'bootstrap'], function($) {
+        requireDomReady(['jquery', 'connector', 'bootstrap'], function($, CO) {
+
+            function toggleMode() {
+                $('#login-form').toggle();
+                $('#register-form').toggle();
+            }
+
             //switch formular Register to Login
             $('#showLoginForm').click(function () {
                 if ($('#login-form').is(':hidden')) {
-                    $('#login-form').toggle();
-                    $('#register-form').toggle();
+                    toggleMode();
                 }
             });
+
             //switch formular Login to Register
             $('#showRegisterForm').click(function () {
                 if ($('#register-form').is(':hidden')) {
-                    $('#login-form').toggle();
-                    $('#register-form').toggle();
+                    toggleMode();
                 }
+            });
+
+            $('#register-submit').click(function (event) {
+                event.preventDefault();
+                CO.post({
+                    url: /*[[@{/signup}]]*/'',
+                    data: {
+                        name: $('#name').val(),
+                        firstname: $('#firstname').val(),
+                        username: $('#usernameRegister').val(),
+                        password: $('#passwordRegister').val()
+                    },
+                    success: function () {
+                        toggleMode();
+                    }
+                });
             });
         });
         /*]]>*/
@@ -99,23 +120,23 @@
                                             </div>
                                         </form>
                                         <!-- panel for register -->
-                                        <form id="register-form" action="" method="post" role="form" style="display: none;">
+                                        <form id="register-form" method="post" role="form" style="display: none;">
                                             <div class="form-group">
                                                 <input type="text" name="username" id="usernameRegister" tabindex="1" class="form-control" placeholder="Username" value=""/>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="Name" value=""/>
+                                                <input type="text" name="name" id="name" tabindex="2" class="form-control" placeholder="Name" value=""/>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" name="firstname" id="firstname" tabindex="1" class="form-control" placeholder="Firstname" value=""/>
+                                                <input type="text" name="firstname" id="firstname" tabindex="3" class="form-control" placeholder="Firstname" value=""/>
                                             </div>
                                             <div class="form-group">
-                                                <input type="password" name="password" id="passwordRegister" tabindex="2" class="form-control" placeholder="Password"/>
+                                                <input type="password" name="password" id="passwordRegister" tabindex="4" class="form-control" placeholder="Password"/>
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-sm-6 col-sm-offset-3">
-                                                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now"/>
+                                                    <div class="col-sm-6 col-sm-offset-3"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                                        <input type="submit" name="register-submit" id="register-submit" tabindex="5" class="form-control btn btn-register" value="Register Now"/>
                                                     </div>
                                                 </div>
                                             </div>

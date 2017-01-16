@@ -76,4 +76,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="1.0-5" author="DAL">
+        <addColumn tableName="person">
+            <column name="firstname" type="${type.string-100}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

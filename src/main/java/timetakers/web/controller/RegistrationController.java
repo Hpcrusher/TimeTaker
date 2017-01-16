@@ -11,17 +11,12 @@
 package timetakers.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import timetakers.model.Person;
-import timetakers.model.User;
-import timetakers.repository.PersonRepository;
-import timetakers.repository.UserRepository;
-import timetakers.web.assembler.PersonAssembler;
+import org.springframework.web.bind.annotation.*;
+import timetakers.services.RegistrationService;
+import timetakers.web.model.SignupDto;
 
 /**
  * @author David Liebl
@@ -32,22 +27,17 @@ import timetakers.web.assembler.PersonAssembler;
 @RequestMapping(value = "/signup")
 public class RegistrationController {
 
-    private PersonRepository personRepository;
-    private UserRepository userRepository;
+    private RegistrationService registrationService;
 
     @Autowired
-    public RegistrationController(PersonRepository personRepository, UserRepository userRepository, PersonAssembler personAssembler) {
-        this.personRepository = personRepository;
-        this.userRepository = userRepository;
+    public RegistrationController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void createPerson(@RequestParam String name, @RequestParam String username, @RequestParam String password) {
-        Person person = Person.builder().setName(name).createPerson();
-        personRepository.save(person);
-        User user = User.builder().setPerson(person).setUserName(username).setPassword(password).createUser();
-        userRepository.save(user);
+    public void createPerson(@RequestBody SignupDto signupDto) {
+        registrationService.register(signupDto);
     }
 
 }

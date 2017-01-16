@@ -21,10 +21,10 @@ define('connector',['jquery'], function($){
         $.ajax({
             url: options.url,
             method: method,
-            data: options.data,
+            data: JSON.stringify(options.data),
             success: options.success,
-            error: options.error
-
+            error: options.error,
+            contentType: 'application/json; charset=utf-8'
         });
     }
 
