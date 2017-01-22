@@ -19,9 +19,8 @@ import timetakers.model.Item;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
-import timetakers.web.assembler.ItemAssembler;
+import timetakers.services.SecurityService;
 import timetakers.web.assembler.RecordAssembler;
-import timetakers.web.model.ItemDto;
 import timetakers.web.model.RecordDto;
 
 import java.util.List;
@@ -34,27 +33,30 @@ import java.util.UUID;
 
 @Controller
 @Transactional
-@RequestMapping(value = "/record/new")
+@RequestMapping(value = "/record")
 public class RecordController {
 
     private RecordRepository recordRepository;
     private RecordAssembler recordAssembler;
     private ItemRepository itemRepository;
+    private SecurityService securityService;
 
     @Autowired
-    public RecordController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository) {
+    public RecordController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository, SecurityService securityService) {
         this.recordRepository = recordRepository;
         this.recordAssembler = recordAssembler;
         this.itemRepository = itemRepository;
+        this.securityService = securityService;
     }
 
-    @RequestMapping(value = "/newRecord", method = RequestMethod.POST)
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
     public void createItem( @RequestBody RecordDto recordDto ) {
         Item item = itemRepository.getOne(recordDto.item);
         Record record = Record.builder()
                 .withComment(recordDto.comment)
                 .withItem(item)
+                .withPerson(securityService.getPerson())
                 .withStart(recordDto.start)
                 .withEnd(recordDto.end)
                 .createRecord();

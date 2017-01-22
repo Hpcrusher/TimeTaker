@@ -10,10 +10,10 @@
 
 package timetakers.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.List;
+import timetakers.repository.converter.ColorConverter;
+
+import javax.persistence.*;
+import java.awt.*;
 import java.util.UUID;
 
 /**
@@ -28,14 +28,13 @@ public class Item extends AbstractIdEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "comment")
-    private String comment;
-
-    @Column(name = "father")
+    @ManyToOne(targetEntity = Item.class)
+    @JoinColumn(name = "father_id")
     private Item father;
 
     @Column(name = "color")
-    private String color;
+    @Convert(converter = ColorConverter.class)
+    private Color color;
 
     public Item() {
     }
@@ -48,14 +47,6 @@ public class Item extends AbstractIdEntity {
         this.title = title;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public Item getFather() {
         return father;
     }
@@ -64,11 +55,11 @@ public class Item extends AbstractIdEntity {
         this.father = father;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
@@ -79,9 +70,8 @@ public class Item extends AbstractIdEntity {
     public static class Builder {
         private UUID id = UUID.randomUUID();
         private String title;
-        private String comment;
         private Item father;
-        private String color;
+        private Color color;
 
         public Builder setId(UUID id) {
             this.id = id;
@@ -93,17 +83,12 @@ public class Item extends AbstractIdEntity {
             return this;
         }
 
-        public Builder withComment(String comment) {
-            this.comment = comment;
-            return this;
-        }
-
         public Builder withFather(Item father) {
             this.father = father;
             return this;
         }
 
-        public Builder withColor(String color) {
+        public Builder withColor(Color color) {
             this.color = color;
             return this;
         }
@@ -112,7 +97,6 @@ public class Item extends AbstractIdEntity {
             Item item = new Item();
             item.setId(id);
             item.setTitle(title);
-            item.setComment(comment);
             item.setfather(father);
             item.setColor(color);
             return item;

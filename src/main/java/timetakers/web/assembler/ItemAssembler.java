@@ -13,10 +13,7 @@ package timetakers.web.assembler;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 import timetakers.model.Item;
-import timetakers.model.Person;
-import timetakers.web.controller.PersonController;
 import timetakers.web.model.ItemDto;
-import timetakers.web.model.PersonDto;
 
 /**
  * Created by Martin Geßenich on 16.01.2017.
@@ -35,8 +32,7 @@ public class ItemAssembler extends ResourceAssemblerSupport<Item, ItemDto> {
         dto.oid = item.getId();
         dto.title = item.getTitle();
         dto.father = item.getFather() == null ? null : item.getFather().getId();
-        dto.comment = item.getComment();
-        dto.color = item.getColor();
+        dto.color = item.getColor() == null ? null : Integer.toHexString(item.getColor().getRGB());
         return dto;
     }
 }

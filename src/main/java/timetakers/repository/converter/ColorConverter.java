@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
+ * Copyright (c) 2017 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -8,16 +8,29 @@
  *
  */
 
-package timetakers.web.model;
+package timetakers.repository.converter;
 
-import java.util.UUID;
+import javax.persistence.AttributeConverter;
+import java.awt.*;
 
 /**
- * Created by Martin Geßenich on 16.01.2017.
+ * @author David Liebl
  */
-public class ItemDto extends IdDto{
+public class ColorConverter implements AttributeConverter<Color, Integer> {
 
-    public String title;
-    public UUID father;
-    public String color;
+    @Override
+    public Integer convertToDatabaseColumn(Color entityValue) {
+        if (entityValue == null) {
+            return null;
+        }
+        return entityValue.getRGB();
+    }
+
+    @Override
+    public Color convertToEntityAttribute(Integer databaseValue) {
+        if (databaseValue == null) {
+            return null;
+        }
+        return new Color(databaseValue);
+    }
 }

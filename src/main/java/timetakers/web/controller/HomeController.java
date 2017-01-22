@@ -10,11 +10,15 @@
 
 package timetakers.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import timetakers.repository.ItemRepository;
+import timetakers.web.assembler.ItemAssembler;
 
 /**
  * @author David Liebl
@@ -25,9 +29,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/")
 public class HomeController {
 
+    private ItemRepository itemRepository;
+    private ItemAssembler itemAssembler;
+
+    @Autowired
+    public HomeController(ItemRepository itemRepository, ItemAssembler itemAssembler) {
+        this.itemRepository = itemRepository;
+        this.itemAssembler = itemAssembler;
+    }
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getHomeAsHtml() {
-        return "home";
+    public ModelAndView getHomeAsHtml() {
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("items", itemAssembler.toResources(itemRepository.findAll()));
+        return modelAndView;
     }
 
 }

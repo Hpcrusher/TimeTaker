@@ -20,6 +20,7 @@ import timetakers.repository.ItemRepository;
 import timetakers.web.assembler.ItemAssembler;
 import timetakers.web.model.ItemDto;
 
+import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ import java.util.UUID;
 
 @Controller
 @Transactional
-@RequestMapping(value = "/item/new")
+@RequestMapping(value = "/item")
 public class ItemController {
 
     private ItemRepository itemRepository;
@@ -42,24 +43,24 @@ public class ItemController {
         this.itemAssembler = itemAssembler;
     }
 
-    @RequestMapping(value = "/newItem", method = RequestMethod.POST)
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
-    public void createItem( @RequestBody ItemDto itemDto ) {
+    public void postNewItem( @RequestBody ItemDto itemDto ) {
         Item father = itemRepository.getOne(itemDto.father);
         Item item = Item.builder().withTitle(itemDto.title)
                 .withFather(father)
-                .withColor(itemDto.color).createItem();
+                .withColor(Color.decode(itemDto.color)).createItem();
 
         itemRepository.save(item);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<ItemDto> getPersonsAsJson() {
+    public List<ItemDto> getItemAsJson() {
         return itemAssembler.toResources(itemRepository.findAll());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ItemDto getPersonWithIdAsJson(@PathVariable UUID id) {
+    public ItemDto getItemWithIdAsJson(@PathVariable UUID id) {
         return itemAssembler.toResource(itemRepository.findOne(id));
     }
 

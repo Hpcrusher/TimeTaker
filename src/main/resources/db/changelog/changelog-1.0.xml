@@ -86,11 +86,33 @@
 
     <changeSet id="1.0-6" author="DAL">
         <createTable tableName="record">
-            <column name="id" type="${type.id}"/>
-            <column name="item" type="${type.id}"/>
+            <column name="id" type="${type.id}">
+                <constraints primaryKey="true" primaryKeyName="record_pk" nullable="false" unique="true"/>
+            </column>
+            <column name="person_id" type="${type.id}">
+                <constraints nullable="false" referencedTableName="person" foreignKeyName="record_has_person_fk" referencedColumnNames="id"/>
+            </column>
+            <column name="item_id" type="${type.id}">
+                <constraints nullable="false" referencedTableName="item" foreignKeyName="record_has_item_fk" referencedColumnNames="id"/>
+            </column>
             <column name="comment" type="${type.string-200}"/>
-            <column name="start_time" type="${type.datetime}"/>
+            <column name="start_time" type="${type.datetime}">
+                <constraints nullable="false"/>
+            </column>
             <column name="end_time" type="${type.datetime}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0-7" author="DAL">
+        <createTable tableName="item">
+            <column name="id" type="${type.id}">
+                <constraints primaryKey="true" primaryKeyName="item_pk" nullable="false" unique="true"/>
+            </column>
+            <column name="title" type="${type.string-100}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="father_id" type="${type.id}"/>
+            <column name="color" type="${type.int}"/>
         </createTable>
     </changeSet>
 

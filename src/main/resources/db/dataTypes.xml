@@ -28,4 +28,6 @@
     <property name="type.datetime" value="BIGINT"/>
     <property name="type.time" value="BIGINT"/>
 
+    <property name="type.int" value="INT"/>
+
 </databaseChangeLog>

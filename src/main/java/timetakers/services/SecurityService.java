@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
+ * Copyright (c) 2017 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -8,16 +8,30 @@
  *
  */
 
-package timetakers.web.model;
+package timetakers.services;
 
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.stereotype.Service;
+import timetakers.model.Person;
+import timetakers.security.CustomUserDetails;
 
 /**
- * Created by Martin Geßenich on 16.01.2017.
+ * @author David Liebl
  */
-public class ItemDto extends IdDto{
 
-    public String title;
-    public UUID father;
-    public String color;
+@Service
+public class SecurityService {
+
+    private SecurityContext securityContext;
+
+    @Autowired
+    public SecurityService(SecurityContext securityContext) {
+        this.securityContext = securityContext;
+    }
+
+    public Person getPerson() {
+        return ((CustomUserDetails)securityContext.getAuthentication().getPrincipal()).getUser().getPerson();
+    }
+
 }
