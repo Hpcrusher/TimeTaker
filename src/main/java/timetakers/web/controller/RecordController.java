@@ -56,7 +56,7 @@ public class RecordController {
         Record record = Record.builder()
                 .withComment(recordDto.comment)
                 .withItem(item)
-                .withPerson(securityService.getPerson())
+                .withPerson(securityService.getLoggedInPerson())
                 .withStart(recordDto.start)
                 .withEnd(recordDto.end)
                 .createRecord();

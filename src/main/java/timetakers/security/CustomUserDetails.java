@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 import timetakers.model.User;
 
 import java.util.Collection;
-import java.util.UUID;
 
 /**
  * @author David Liebl
@@ -30,10 +29,6 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user, Collection<String> roles) {
         this.user = user;
         this.roleList = roles;
-    }
-
-    public UUID getId() {
-        return user.getId();
     }
 
     public User getUser() {

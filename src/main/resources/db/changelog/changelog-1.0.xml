@@ -107,7 +107,7 @@
             </column>
             <column name="item_id" type="${type.id}">
                 <constraints nullable="false" referencedTableName="item" foreignKeyName="record_has_item_fk" referencedColumnNames="id"/>
-            </column>l
+            </column>
             <column name="comment" type="${type.string-200}"/>
             <column name="start_time" type="${type.datetime}">
                 <constraints nullable="false"/>

@@ -10,13 +10,12 @@
 
 package timetakers.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import timetakers.security.CustomUserDetails;
+import timetakers.services.SecurityService;
 
 /**
  * @author David Liebl
@@ -24,6 +23,13 @@ import timetakers.security.CustomUserDetails;
 
 @Controller
 public class LoginController {
+
+    private SecurityService securityService;
+
+    @Autowired
+    public LoginController(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public String getLoginAsHtml() {
@@ -34,13 +40,7 @@ public class LoginController {
     }
 
     private boolean isAuthenticated() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        boolean authenticated = false;
-        Object principal = securityContext.getAuthentication().getPrincipal();
-        if (principal instanceof CustomUserDetails) {
-            authenticated = ((CustomUserDetails)principal).getId() != null;
-        }
-        return authenticated;
+        return securityService.getLoggedInUser().getId() != null;
     }
 
 }

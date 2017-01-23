@@ -10,11 +10,13 @@
 
 package timetakers.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import timetakers.model.Person;
+import timetakers.model.User;
 import timetakers.security.CustomUserDetails;
+
 
 /**
  * @author David Liebl
@@ -25,13 +27,20 @@ public class SecurityService {
 
     private SecurityContext securityContext;
 
-    @Autowired
-    public SecurityService(SecurityContext securityContext) {
-        this.securityContext = securityContext;
+    public SecurityService() {
+        this.securityContext = SecurityContextHolder.getContext();
     }
 
-    public Person getPerson() {
-        return ((CustomUserDetails)securityContext.getAuthentication().getPrincipal()).getUser().getPerson();
+    private CustomUserDetails getCustomUserDetails() {
+        return ((CustomUserDetails)securityContext.getAuthentication().getPrincipal());
+    }
+
+    public User getLoggedInUser() {
+        return getCustomUserDetails().getUser();
+    }
+
+    public Person getLoggedInPerson() {
+        return getLoggedInUser().getPerson();
     }
 
 }
