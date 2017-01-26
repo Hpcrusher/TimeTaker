@@ -40,7 +40,7 @@ public class LoginController {
     }
 
     private boolean isAuthenticated() {
-        return securityService.getLoggedInUser().getId() != null;
+        return securityService.getLoggedInUser() != null;
     }
 
 }

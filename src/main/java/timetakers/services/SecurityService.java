@@ -10,6 +10,7 @@
 
 package timetakers.services;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,26 @@ public class SecurityService {
     }
 
     private CustomUserDetails getCustomUserDetails() {
-        return ((CustomUserDetails)securityContext.getAuthentication().getPrincipal());
+        final Authentication authentication = securityContext.getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
+        return (CustomUserDetails) authentication.getPrincipal();
     }
 
     public User getLoggedInUser() {
+        CustomUserDetails customUserDetails = getCustomUserDetails();
+        if (customUserDetails == null) {
+            return null;
+        }
         return getCustomUserDetails().getUser();
     }
 
     public Person getLoggedInPerson() {
+        User loggedInUser = getLoggedInUser();
+        if (loggedInUser == null) {
+            return null;
+        }
         return getLoggedInUser().getPerson();
     }
 
