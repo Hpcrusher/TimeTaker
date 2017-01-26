@@ -41,7 +41,7 @@
                     <a class="navbar-brand" th:href="@{/}">Timetaker</a>
                 </div>
                 <ul class="nav navbar-nav">
-                    <li><a class="navbar-right headerPointer" th:text="#{navbar.newProject}">Add Project</a></li>
+                    <li><a th:href="@{/additem}" class="navbar-right headerPointer" th:text="#{navbar.newProject}">Add Project</a></li>
                     <li><a class="navbar-right headerPointer" th:text="#{navbar.newItem}">New Item</a></li>
                     <li><a class="navbar-right headerPointer" th:text="#{navbar.summary}">Summary</a></li>
                 </ul>
