@@ -20,6 +20,9 @@
 
         });
         /*]]>*/
+        function setColor() {
+            $('#kachel').backgroundColor.setColor(red);
+        }
     </script>
     <link rel="stylesheet" th:href="@{/css/home.css}"/>
 </head>
@@ -40,10 +43,7 @@
         <div class="row">
             <th:block th:each="item : ${items}">
                 <div class="col-md-3 portfolio-item">
-                    <h1 th:text="${item.title}"></h1>
-                    <a href="#">
-                        <img class="img-responsive" src="http://placehold.it/750x450" alt=""/>
-                    </a>
+                    <a id="kachel" class="kacheln"  href="#" th:text="${item.title}"/>
                 </div>
             </th:block>
         </div>
