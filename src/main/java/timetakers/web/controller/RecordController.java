@@ -19,7 +19,6 @@ import timetakers.model.Item;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
-import timetakers.services.SecurityService;
 import timetakers.web.assembler.RecordAssembler;
 import timetakers.web.model.RecordDto;
 
@@ -39,14 +38,12 @@ public class RecordController {
     private RecordRepository recordRepository;
     private RecordAssembler recordAssembler;
     private ItemRepository itemRepository;
-    private SecurityService securityService;
 
     @Autowired
-    public RecordController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository, SecurityService securityService) {
+    public RecordController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository) {
         this.recordRepository = recordRepository;
         this.recordAssembler = recordAssembler;
         this.itemRepository = itemRepository;
-        this.securityService = securityService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -56,7 +53,6 @@ public class RecordController {
         Record record = Record.builder()
                 .withComment(recordDto.comment)
                 .withItem(item)
-                .withPerson(securityService.getLoggedInPerson())
                 .withStart(recordDto.start)
                 .withEnd(recordDto.end)
                 .createRecord();

@@ -19,5 +19,6 @@ public class ItemDto extends IdDto{
 
     public String title;
     public UUID father;
+    public UUID person;
     public String color;
 }

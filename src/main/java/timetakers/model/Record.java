@@ -23,10 +23,6 @@ import java.util.UUID;
 @Table(name = "record")
 public class Record extends AbstractIdEntity {
 
-    @ManyToOne(optional = false, targetEntity = Person.class)
-    @JoinColumn(name = "person_id")
-    private Person person;
-
     @ManyToOne(optional = false, targetEntity = Item.class)
     @JoinColumn(name = "item_id")
     private Item item;
@@ -41,14 +37,6 @@ public class Record extends AbstractIdEntity {
     private LocalDateTime end;
 
     public Record() {
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 
     public Item getItem() {
@@ -90,18 +78,12 @@ public class Record extends AbstractIdEntity {
     public static class Builder {
         private UUID id = UUID.randomUUID();
         private Item item;
-        private Person person;
         private String comment;
         private LocalDateTime start;
         private LocalDateTime end;
 
         public Builder setId(UUID id) {
             this.id = id;
-            return this;
-        }
-
-        public Builder withPerson(Person person) {
-            this.person = person;
             return this;
         }
 
@@ -129,7 +111,6 @@ public class Record extends AbstractIdEntity {
             Record record = new Record();
             record.setId(id);
             record.setItem(item);
-            record.setPerson(person);
             record.setComment(comment);
             record.setStart(start);
             record.setEnd(end);
