@@ -28,6 +28,10 @@ public class Item extends AbstractIdEntity {
     @Column(name = "title")
     private String title;
 
+    @ManyToOne(optional = false, targetEntity = Person.class)
+    @JoinColumn(name = "person_id")
+    private Person person;
+
     @ManyToOne(targetEntity = Item.class)
     @JoinColumn(name = "father_id")
     private Item father;
@@ -45,6 +49,14 @@ public class Item extends AbstractIdEntity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public Item getFather() {
@@ -70,6 +82,7 @@ public class Item extends AbstractIdEntity {
     public static class Builder {
         private UUID id = UUID.randomUUID();
         private String title;
+        private Person person;
         private Item father;
         private Color color;
 
@@ -80,6 +93,11 @@ public class Item extends AbstractIdEntity {
 
         public Builder withTitle(String title) {
             this.title = title;
+            return this;
+        }
+
+        public Builder withPerson(Person person) {
+            this.person = person;
             return this;
         }
 
@@ -97,6 +115,7 @@ public class Item extends AbstractIdEntity {
             Item item = new Item();
             item.setId(id);
             item.setTitle(title);
+            item.setPerson(person);
             item.setfather(father);
             item.setColor(color);
             return item;

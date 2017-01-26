@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import timetakers.model.Item;
 import timetakers.repository.ItemRepository;
+import timetakers.services.SecurityService;
 import timetakers.web.assembler.ItemAssembler;
 import timetakers.web.model.ItemDto;
 
@@ -36,18 +37,22 @@ public class ItemController {
 
     private ItemRepository itemRepository;
     private ItemAssembler itemAssembler;
+    private SecurityService securityService;
 
     @Autowired
-    public ItemController(ItemRepository itemRepository, ItemAssembler itemAssembler) {
+    public ItemController(ItemRepository itemRepository, ItemAssembler itemAssembler, SecurityService securityService) {
         this.itemRepository = itemRepository;
         this.itemAssembler = itemAssembler;
+        this.securityService = securityService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
     public void postNewItem( @RequestBody ItemDto itemDto ) {
         Item father = itemRepository.getOne(itemDto.father);
-        Item item = Item.builder().withTitle(itemDto.title)
+        Item item = Item.builder()
+                .withTitle(itemDto.title)
+                .withPerson(securityService.getLoggedInPerson())
                 .withFather(father)
                 .withColor(Color.decode(itemDto.color)).createItem();
 
