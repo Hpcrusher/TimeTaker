@@ -22,6 +22,7 @@ import timetakers.repository.RecordRepository;
 import timetakers.web.assembler.RecordAssembler;
 import timetakers.web.model.RecordDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,7 +49,7 @@ public class RecordController {
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
-    public void createItem( @RequestBody RecordDto recordDto ) {
+    public void createRecord( @RequestBody RecordDto recordDto ) {
         Item item = itemRepository.getOne(recordDto.item);
         Record record = Record.builder()
                 .withComment(recordDto.comment)
@@ -60,14 +61,44 @@ public class RecordController {
         recordRepository.save(record);
     }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public void deleteRecord( @PathVariable UUID id ) {
+        recordRepository.delete(id);
+    }
+
+    @RequestMapping(value = "/udpate", method = RequestMethod.POST)
+    @ResponseBody
+    public void updateRecord( @RequestBody RecordDto recordDto ) {
+        Record record = recordRepository.getOne(recordDto.oid);
+        if ( record == null){
+            throw new IllegalArgumentException("No matching record found");
+        }
+        record.setComment(recordDto.comment);
+        record.setStart(recordDto.start);
+        record.setEnd(recordDto.end);
+        record.setItem(itemRepository.getOne(recordDto.item));
+        recordRepository.save(record);
+    }
+
+    @RequestMapping(value = "/udpate", method = RequestMethod.POST)
+    @ResponseBody
+    public void updateRecord(@PathVariable UUID recordId, @PathVariable LocalDateTime endTime) {
+        Record record = recordRepository.getOne(recordId);
+        if (record == null) {
+            throw new IllegalArgumentException( "Found no matching record");
+        }
+        record.setEnd(endTime);
+        recordRepository.save(record);
+    }
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<RecordDto> getPersonsAsJson() {
+    public @ResponseBody List<RecordDto> getRecordsAsJson() {
         return recordAssembler.toResources(recordRepository.findAll());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public RecordDto getPersonWithIdAsJson(@PathVariable UUID id) {
+    public RecordDto getRecordWithIdAsJson(@PathVariable UUID id) {
         return recordAssembler.toResource(recordRepository.findOne(id));
     }
-
 }

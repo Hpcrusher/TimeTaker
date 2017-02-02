@@ -23,6 +23,6 @@ import java.util.UUID;
  */
 
 @Repository
-public interface RecordRepository extends JpaRepository<Record, UUID>, JpaSpecificationExecutor<Item> {
+public interface RecordRepository extends JpaRepository<Record, UUID>, JpaSpecificationExecutor<Record> {
 
 }
