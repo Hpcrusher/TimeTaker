@@ -37,13 +37,11 @@ public class ItemController {
 
     private ItemRepository itemRepository;
     private ItemAssembler itemAssembler;
-    private SecurityService securityService;
 
     @Autowired
-    public ItemController(ItemRepository itemRepository, ItemAssembler itemAssembler, SecurityService securityService) {
+    public ItemController(ItemRepository itemRepository, ItemAssembler itemAssembler) {
         this.itemRepository = itemRepository;
         this.itemAssembler = itemAssembler;
-        this.securityService = securityService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -52,7 +50,7 @@ public class ItemController {
         Item father = itemRepository.getOne(itemDto.father);
         Item item = Item.builder()
                 .withTitle(itemDto.title)
-                .withPerson(securityService.getLoggedInPerson())
+                .withPerson(SecurityService.getLoggedInPerson())
                 .withFather(father)
                 .withColor(Color.decode(itemDto.color)).createItem();
 

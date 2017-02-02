@@ -8,31 +8,14 @@
  *
  */
 
-package timetakers.web.controller;
-
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import timetakers.services.SecurityService;
+package timetakers.web.model;
 
 /**
  * @author David Liebl
  */
+public class ErrorDto extends Dto {
 
-@Controller
-public class LoginController {
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getLoginAsHtml() {
-        if (isAuthenticated()) {
-            return "redirect:/";
-        }
-        return "login";
-    }
-
-    private boolean isAuthenticated() {
-        return SecurityService.getLoggedInUser() != null;
-    }
+    public String message;
+    public String elementId;
 
 }

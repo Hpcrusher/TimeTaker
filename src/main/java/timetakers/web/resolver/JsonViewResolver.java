@@ -8,31 +8,24 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.web.resolver;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import timetakers.services.SecurityService;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+
+import java.util.Locale;
 
 /**
  * @author David Liebl
  */
+public class JsonViewResolver implements ViewResolver {
 
-@Controller
-public class LoginController {
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getLoginAsHtml() {
-        if (isAuthenticated()) {
-            return "redirect:/";
-        }
-        return "login";
-    }
-
-    private boolean isAuthenticated() {
-        return SecurityService.getLoggedInUser() != null;
+    @Override
+    public View resolveViewName(String s, Locale locale) throws Exception {
+        MappingJackson2JsonView view = new MappingJackson2JsonView();
+        view.setPrettyPrint(true);
+        return view;
     }
 
 }

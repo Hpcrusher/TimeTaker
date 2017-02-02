@@ -8,31 +8,29 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.util;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import timetakers.services.SecurityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
 
 /**
  * @author David Liebl
  */
 
-@Controller
-public class LoginController {
+@Component
+public class TextKeyResolver {
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getLoginAsHtml() {
-        if (isAuthenticated()) {
-            return "redirect:/";
-        }
-        return "login";
+    private final MessageSource messageSource;
+
+    @Autowired
+    public TextKeyResolver(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 
-    private boolean isAuthenticated() {
-        return SecurityService.getLoggedInUser() != null;
+    public String resolveTextKey(TextKey textKey) {
+        return messageSource.getMessage(textKey, LocaleContextHolder.getLocale());
     }
 
 }

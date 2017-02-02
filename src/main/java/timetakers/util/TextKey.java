@@ -8,31 +8,43 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.util;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import timetakers.services.SecurityService;
+import org.springframework.context.MessageSourceResolvable;
+
 
 /**
  * @author David Liebl
  */
+public class TextKey implements MessageSourceResolvable {
 
-@Controller
-public class LoginController {
+    private final String key;
+    private final Object[] arguments;
+    private final String defaultMessage;
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getLoginAsHtml() {
-        if (isAuthenticated()) {
-            return "redirect:/";
-        }
-        return "login";
+    public TextKey(String key, Object... arguments) {
+        this(key, "", arguments);
     }
 
-    private boolean isAuthenticated() {
-        return SecurityService.getLoggedInUser() != null;
+    public TextKey(String key, String defaultMessage, Object... arguments) {
+        this.key = key;
+        this.arguments = arguments;
+        this.defaultMessage = defaultMessage;
+    }
+
+    @Override
+    public String[] getCodes() {
+        return new String[] {key};
+    }
+
+    @Override
+    public Object[] getArguments() {
+        return arguments;
+    }
+
+    @Override
+    public String getDefaultMessage() {
+        return defaultMessage;
     }
 
 }

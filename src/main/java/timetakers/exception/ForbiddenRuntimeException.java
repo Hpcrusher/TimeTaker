@@ -8,31 +8,23 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.exception;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import timetakers.services.SecurityService;
+import timetakers.util.TextKey;
 
 /**
  * @author David Liebl
  */
+public class ForbiddenRuntimeException extends RuntimeException{
 
-@Controller
-public class LoginController {
+    private final TextKey textKey;
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getLoginAsHtml() {
-        if (isAuthenticated()) {
-            return "redirect:/";
-        }
-        return "login";
+    public ForbiddenRuntimeException(TextKey textKey) {
+        this.textKey = textKey;
     }
 
-    private boolean isAuthenticated() {
-        return SecurityService.getLoggedInUser() != null;
+    public TextKey getTextKey() {
+        return textKey;
     }
 
 }

@@ -8,24 +8,21 @@
  *
  */
 
-package timetakers.web.viewresolver;
+package timetakers.repository;
 
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+import timetakers.model.Person;
+import timetakers.model.Setting;
 
-import java.util.Locale;
+import java.util.UUID;
 
 /**
  * @author David Liebl
  */
-public class JsonViewResolver implements ViewResolver {
+@Repository
+public interface SettingRepository extends JpaRepository<Setting, UUID>, JpaSpecificationExecutor<Setting> {
 
-    @Override
-    public View resolveViewName(String s, Locale locale) throws Exception {
-        MappingJackson2JsonView view = new MappingJackson2JsonView();
-        view.setPrettyPrint(true);
-        return view;
-    }
-
+    Setting findByKeyAndPerson(String key, Person person);
 }
