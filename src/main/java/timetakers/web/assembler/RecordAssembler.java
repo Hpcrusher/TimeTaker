@@ -32,7 +32,7 @@ public class RecordAssembler extends ResourceAssemblerSupport<Record, RecordDto>
         dto.oid = record.getId();
         dto.comment = record.getComment();
         dto.item = record.getItem().getId();
-        dto.start = record.getStart();
+        dto.start = record.getStart().toString();
         dto.end = record.getEnd();
         return dto;
     }

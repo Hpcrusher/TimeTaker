@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import timetakers.converter.LocalDateTimeConverter;
 import timetakers.model.Item;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
@@ -49,11 +50,13 @@ public class RecordController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
     public void createItem( @RequestBody RecordDto recordDto ) {
+
         Item item = itemRepository.getOne(recordDto.item);
+        LocalDateTimeConverter ldtc = new LocalDateTimeConverter("d.M.yyyy H:m:s");
         Record record = Record.builder()
                 .withComment(recordDto.comment)
                 .withItem(item)
-                .withStart(recordDto.start)
+                .withStart(ldtc.convert(recordDto.start))
                 .withEnd(recordDto.end)
                 .createRecord();
 

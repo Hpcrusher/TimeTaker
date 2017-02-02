@@ -20,6 +20,6 @@ public class RecordDto extends IdDto{
 
     public UUID item;
     public String comment;
-    public LocalDateTime start;
+    public String start;
     public LocalDateTime end;
 }

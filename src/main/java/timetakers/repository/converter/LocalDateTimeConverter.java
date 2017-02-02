@@ -25,11 +25,15 @@ public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime,
 
     @Override
     public Long convertToDatabaseColumn(LocalDateTime entityValue) {
+        if (entityValue==null)
+            return null;
         return entityValue.toEpochSecond(ZoneOffset.UTC);
     }
 
     @Override
     public LocalDateTime convertToEntityAttribute(Long dbValue) {
+        if(dbValue==null)
+            return null;
         return LocalDateTime.ofEpochSecond(dbValue, 0, ZoneOffset.UTC);
     }
 }

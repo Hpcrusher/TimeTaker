@@ -16,13 +16,27 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'bootstrap'], function($) {
+        requireDomReady(['jquery', 'connector', 'bootstrap'], function($, CO) {
+            $('.kacheln').click(function (event) {
+                event.preventDefault();
+                var date = new Date($.now());
+                alert(date.toLocaleDateString()+'T'+date.toLocaleTimeString());
 
+                CO.post({
+                    url: /*[[@{/record/new}]]*/'',
+                    data: {
+                        item: $(this).data('id'),
+                        comment: null,
+                        start:  date.toLocaleDateString() +' '+date.toLocaleTimeString(),
+                        end: null
+                    },
+                    success: function () {
+                        alert("Hello! I am an alert box!!");
+                    }
+                });
+            });
         });
         /*]]>*/
-        function setColor() {
-            $('#kachel').backgroundColor.setColor(red);
-        }
     </script>
     <link rel="stylesheet" th:href="@{/css/home.css}"/>
 </head>
@@ -43,7 +57,7 @@
         <div class="row">
             <th:block th:each="item : ${items}">
                 <div class="col-md-3 portfolio-item">
-                    <a id="kachel" class="kacheln"  href="#" th:text="${item.title}"/>
+                    <a th:id="${item.oid}" class="kacheln" th:text="${item.title}" th:attr="data-id=${item.oid}"/>
                 </div>
             </th:block>
         </div>
@@ -84,12 +98,6 @@
         <hr />
     </div>
     <!-- /.container -->
-
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
 </div>
 </body>
 </html>
