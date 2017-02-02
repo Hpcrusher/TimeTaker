@@ -67,7 +67,7 @@ public class RecordController {
         recordRepository.delete(id);
     }
 
-    @RequestMapping(value = "/udpate", method = RequestMethod.POST)
+    @RequestMapping(value = "/udpate", method = RequestMethod.PATCH)
     @ResponseBody
     public void updateRecord( @RequestBody RecordDto recordDto ) {
         Record record = recordRepository.getOne(recordDto.oid);
@@ -81,9 +81,9 @@ public class RecordController {
         recordRepository.save(record);
     }
 
-    @RequestMapping(value = "/udpate", method = RequestMethod.POST)
+    @RequestMapping(value = "/udpate/end", method = RequestMethod.PATCH)
     @ResponseBody
-    public void updateRecord(@PathVariable UUID recordId, @PathVariable LocalDateTime endTime) {
+    public void updateRecordEndTime(@PathVariable UUID recordId, @PathVariable LocalDateTime endTime) {
         Record record = recordRepository.getOne(recordId);
         if (record == null) {
             throw new IllegalArgumentException( "Found no matching record");
