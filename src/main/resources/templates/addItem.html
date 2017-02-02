@@ -16,12 +16,26 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'bootstrap'], function($) {
+        requireDomReady(['jquery', 'bootstrap', 'colorpicker'], function($) {
+            $('#cp2').colorpicker({
+                color: getRandomColor(),
+                format: 'rgb'
+            });
+            console.log('Test');
 
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++ ) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
         });
         /*]]>*/
     </script>
     <link rel="stylesheet" th:href="@{/css/addItem.css}"/>
+    <link rel="stylesheet" th:href="@{/css/3rd/bootstrap-colorpicker.min.css}"/>
 </head>
 <body>
 <div layout:fragment="content">
@@ -40,43 +54,10 @@
                                         <input type="text" name="father" id="fatherItem" tabindex="2" class="form-control" placeholder="Father" value=""/>
                                     </div>
                                     <div class="form-group">
-                                        <input id="cp9" type="text" class="form-control" value="pink" />
-                                        <style>
-                                            .colorpicker-2x .colorpicker-saturation {
-                                                width: 200px;
-                                                height: 200px;
-                                            }
-
-                                            .colorpicker-2x .colorpicker-hue,
-                                            .colorpicker-2x .colorpicker-alpha {
-                                                width: 30px;
-                                                height: 200px;
-                                            }
-
-                                            .colorpicker-2x .colorpicker-color,
-                                            .colorpicker-2x .colorpicker-color div {
-                                                height: 30px;
-                                            }
-                                        </style>
-                                        <script>
-                                            $(function() {
-                                                $('#cp9').colorpicker({
-                                                    customClass: 'colorpicker-2x',
-                                                    sliders: {
-                                                        saturation: {
-                                                            maxLeft: 200,
-                                                            maxTop: 200
-                                                        },
-                                                        hue: {
-                                                            maxTop: 200
-                                                        },
-                                                        alpha: {
-                                                            maxTop: 200
-                                                        }
-                                                    }
-                                                });
-                                            });
-                                        </script>
+                                        <div id="cp2" class="input-group colorpicker-component">
+                                            <input type="text" value="#000000" class="form-control" />
+                                            <span class="input-group-addon"><i></i></span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
@@ -86,7 +67,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                                <input type="submit" name="item-cancel" id="item-cancel" tabindex="5" class="form-control btn btn-cancel" value="Cancel"/>
+                                                <i th:href="@{/}" id="item-cancel" tabindex="5" class="form-control btn btn-cancel"><span >Cancel</span></i>
                                             </div>
                                         </div>
                                     </div>

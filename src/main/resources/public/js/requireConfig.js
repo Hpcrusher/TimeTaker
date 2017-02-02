@@ -18,11 +18,17 @@ requirejs.config({
         // 3rd party
         jquery: '3rd/jquery-3.1.1.min',
         bootstrap: '3rd/bootstrap.min',
-        connnector: 'connector'
+        connnector: 'connector',
+        colorpicker: '3rd/bootstrap-colorpicker.min'
+        //color: '3rd/colorpicker-color',
+        //colorpickerDefault: '3rd/colorpicker-defaults',
+        //colorpickerWrapper: '3rd/colorpicker-plugin-wrapper'
     },
     shim: {
         jquery: { "exports": "$"},
         bootstrap: ['jquery'],
-        connector: ['jquery']
+        connector: ['jquery'],
+        colorpicker: ['jquery', 'bootstrap']
+        //colorpicker: ['bootstrap', 'color', 'colorpickerDefault', 'colorpickerWrapper']
     }
 });
