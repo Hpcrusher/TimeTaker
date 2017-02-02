@@ -73,11 +73,12 @@ public class RecordController {
     @ResponseBody
     public void updateRecord( @RequestBody RecordDto recordDto ) {
         Record record = recordRepository.getOne(recordDto.oid);
+        LocalDateTimeConverter ldtc = new LocalDateTimeConverter("d.M.yyyy H:m:s");
         if ( record == null){
             throw new IllegalArgumentException("No matching record found");
         }
         record.setComment(recordDto.comment);
-        record.setStart(recordDto.start);
+        record.setStart(ldtc.convert(recordDto.start));
         record.setEnd(recordDto.end);
         record.setItem(itemRepository.getOne(recordDto.item));
         recordRepository.save(record);
