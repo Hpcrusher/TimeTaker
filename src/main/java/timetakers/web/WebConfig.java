@@ -23,10 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import timetakers.converter.LocalDateTimeConverter;
 import timetakers.web.resolver.DBLocaleResolver;
-import timetakers.web.viewresolver.JsonViewResolver;
-
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import timetakers.web.resolver.JsonViewResolver;
 
 /**
  * @author David Liebl
