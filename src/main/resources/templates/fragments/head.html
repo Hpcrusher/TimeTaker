@@ -48,15 +48,20 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <span th:text="#{global.language}">Language</span>
+                            <th:block th:if="${#locale.toString() == 'en_US'}">
+                                <img th:src="@{/images/gb.svg}"/>
+                            </th:block>
+                            <th:block th:if="${#locale.toString() == 'de_DE'}">
+                                <img th:src="@{/images/de.svg}"/>
+                            </th:block>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>
-                                <a th:href="@{?mylocale=en_US}"><img th:src="@{/images/gb.svg}" alt="Selfhtml" style = "margin-bottom: 5%"/></a>
+                                <a th:href="@{?mylocale=en_US}"><img th:src="@{/images/gb.svg}"/></a>
                             </li>
                             <li>
-                                <a th:href="@{?mylocale=de_DE}"><img th:src="@{/images/de.svg}" alt="Selfhtml" style = "margin-bottom: 5%"/></a>
+                                <a th:href="@{?mylocale=de_DE}"><img th:src="@{/images/de.svg}"/></a>
                             </li>
                         </ul>
                     </li>
