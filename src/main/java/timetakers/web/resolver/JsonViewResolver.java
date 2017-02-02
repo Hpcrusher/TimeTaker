@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
+ * Copyright (c) 2017 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -8,21 +8,24 @@
  *
  */
 
-package timetakers.repository;
+package timetakers.web.resolver;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
-import timetakers.model.Item;
-import timetakers.model.Record;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import java.util.UUID;
+import java.util.Locale;
 
 /**
- * @author Martin Geßenich
+ * @author David Liebl
  */
+public class JsonViewResolver implements ViewResolver {
 
-@Repository
-public interface RecordRepository extends JpaRepository<Record, UUID>, JpaSpecificationExecutor<Record> {
+    @Override
+    public View resolveViewName(String s, Locale locale) throws Exception {
+        MappingJackson2JsonView view = new MappingJackson2JsonView();
+        view.setPrettyPrint(true);
+        return view;
+    }
 
 }

@@ -8,31 +8,64 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.model;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import timetakers.services.SecurityService;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.util.UUID;
 
 /**
  * @author David Liebl
  */
 
-@Controller
-public class LoginController {
+@Entity(name = "setting")
+public class Setting extends AbstractIdEntity {
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getLoginAsHtml() {
-        if (isAuthenticated()) {
-            return "redirect:/";
-        }
-        return "login";
+    @Column(name = "skey")
+    private String key;
+
+    @Column(name = "svalue")
+    private String value;
+
+    @ManyToOne(optional = false, targetEntity = Person.class)
+    @JoinColumn(name = "person_id")
+    private Person person;
+
+    public Setting() {
     }
 
-    private boolean isAuthenticated() {
-        return SecurityService.getLoggedInUser() != null;
+    public Setting(String key, String value, Person person) {
+        this.id = UUID.randomUUID();
+        this.key = key;
+        this.value = value;
+        this.person = person;
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
 
 }

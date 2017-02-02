@@ -11,9 +11,7 @@
 package timetakers.services;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import timetakers.model.Person;
 import timetakers.model.User;
 import timetakers.security.CustomUserDetails;
@@ -23,24 +21,20 @@ import timetakers.security.CustomUserDetails;
  * @author David Liebl
  */
 
-@Service
 public class SecurityService {
 
-    private SecurityContext securityContext;
-
-    public SecurityService() {
-        this.securityContext = SecurityContextHolder.getContext();
-    }
-
-    private CustomUserDetails getCustomUserDetails() {
-        final Authentication authentication = securityContext.getAuthentication();
+    private static CustomUserDetails getCustomUserDetails() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return null;
         }
-        return (CustomUserDetails) authentication.getPrincipal();
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            return (CustomUserDetails) authentication.getPrincipal();
+        }
+        return null;
     }
 
-    public User getLoggedInUser() {
+    public static User getLoggedInUser() {
         CustomUserDetails customUserDetails = getCustomUserDetails();
         if (customUserDetails == null) {
             return null;
@@ -48,7 +42,7 @@ public class SecurityService {
         return getCustomUserDetails().getUser();
     }
 
-    public Person getLoggedInPerson() {
+    public static Person getLoggedInPerson() {
         User loggedInUser = getLoggedInUser();
         if (loggedInUser == null) {
             return null;

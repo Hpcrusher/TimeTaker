@@ -16,12 +16,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import timetakers.model.Item;
+import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
+import timetakers.repository.RecordRepository;
+import timetakers.repository.specification.RecordSpecification;
 import timetakers.services.SecurityService;
-import timetakers.web.assembler.ItemAssembler;
-import timetakers.web.model.ItemDto;
+import timetakers.util.DateHelper;
+import timetakers.web.assembler.RecordAssembler;
+import timetakers.web.model.RecordDto;
 
-import java.awt.*;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,39 +37,22 @@ import java.util.UUID;
 
 @Controller
 @Transactional
-@RequestMapping(value = "/item")
-public class ItemController {
+@RequestMapping(value = "/overview")
+public class OverviewController {
 
+    private RecordRepository recordRepository;
+    private RecordAssembler recordAssembler;
     private ItemRepository itemRepository;
-    private ItemAssembler itemAssembler;
 
     @Autowired
-    public ItemController(ItemRepository itemRepository, ItemAssembler itemAssembler) {
+    public OverviewController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository) {
+        this.recordRepository = recordRepository;
+        this.recordAssembler = recordAssembler;
         this.itemRepository = itemRepository;
-        this.itemAssembler = itemAssembler;
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    @ResponseBody
-    public void postNewItem( @RequestBody ItemDto itemDto ) {
-        Item father = itemRepository.getOne(itemDto.father);
-        Item item = Item.builder()
-                .withTitle(itemDto.title)
-                .withPerson(SecurityService.getLoggedInPerson())
-                .withFather(father)
-                .withColor(Color.decode(itemDto.color)).createItem();
-
-        itemRepository.save(item);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ItemDto> getItemAsJson() {
-        return itemAssembler.toResources(itemRepository.findAll());
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ItemDto getItemWithIdAsJson(@PathVariable UUID id) {
-        return itemAssembler.toResource(itemRepository.findOne(id));
-    }
-
+//    @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+//    public List<RecordDto> getPersonWithIdAsJson(@PathVariable UUID person) {
+//        return recordRepository.findAll(new RecordSpecification(SecurityService.getLoggedInPerson(), DateHelper.getStartPointOf(LocalDateTime.now()), LocalDateTime.now(Clock.systemUTC())));
+//    }
 }

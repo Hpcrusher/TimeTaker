@@ -18,13 +18,21 @@ define('connector',['jquery'], function($){
     });
 
     function ajaxRequest(method, options) {
+        var data = JSON.stringify(options.data);
+        if (method === 'GET') {
+            data = options.data;
+        }
         $.ajax({
             url: options.url,
             method: method,
-            data: JSON.stringify(options.data),
+            data: data,
             success: options.success,
             error: options.error,
-            contentType: 'application/json; charset=utf-8'
+            contentType: 'application/json; charset=utf-8',
+            statusCode:{
+                500: function (data) {
+                }
+            }
         });
     }
 
