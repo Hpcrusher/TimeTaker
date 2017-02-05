@@ -11,11 +11,14 @@
 package timetakers.repository.converter;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.time.LocalTime;
 
 /**
  * @author David Liebl
  */
+
+@Converter(autoApply = true)
 public class LocalTimeConverter implements AttributeConverter<LocalTime, Long> {
     @Override
     public Long convertToDatabaseColumn(LocalTime entityValue) {
