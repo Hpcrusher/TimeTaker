@@ -19,15 +19,12 @@
         requireDomReady(['jquery', 'connector', 'bootstrap'], function($, CO) {
             $('.kacheln').click(function (event) {
                 event.preventDefault();
-                var date = new Date($.now());
-                alert(date.toLocaleDateString()+'T'+date.toLocaleTimeString());
-
                 CO.post({
                     url: /*[[@{/record/new}]]*/'',
                     data: {
                         item: $(this).data('id'),
                         comment: null,
-                        start:  date.toLocaleDateString() +' '+date.toLocaleTimeString(),
+                        start:  (new Date).toISOString(),
                         end: null
                     },
                     success: function () {

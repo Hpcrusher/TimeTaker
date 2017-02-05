@@ -14,31 +14,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import timetakers.converter.LocalDateTimeConverter;
 import timetakers.web.resolver.DBLocaleResolver;
-import timetakers.web.resolver.JsonViewResolver;
 
 /**
  * @author David Liebl
  */
 
 @Configuration
+@ImportResource("classpath:/config/json-mvc-config.xml")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
     private DBLocaleResolver resolver;
-
-    @Bean
-    public ViewResolver jsonViewResolver() {
-        return new JsonViewResolver();
-    }
 
     @Bean
     public MessageSource messageSource() {
@@ -62,7 +57,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addFormatters(FormatterRegistry registry){
-        registry.addConverter(new LocalDateTimeConverter("d.M.yyyy HH:mm:ss"));
+        registry.addConverter(new LocalDateTimeConverter("yyyy-MM-dd'T'HH:mm:ssXXX"));
     }
 
 }

@@ -21,10 +21,14 @@ import java.util.Locale;
  */
 public class JsonViewResolver implements ViewResolver {
 
+    private MappingJackson2JsonView view = null;
+
+    public void setView(MappingJackson2JsonView view) {
+        this.view = view;
+    }
+
     @Override
-    public View resolveViewName(String s, Locale locale) throws Exception {
-        MappingJackson2JsonView view = new MappingJackson2JsonView();
-        view.setPrettyPrint(true);
+    public View resolveViewName(String s, Locale locale){
         return view;
     }
 
