@@ -50,7 +50,7 @@ a{
     padding:2px;
     margin-top:5px;
     margin-bottom:5px;
-    text-decoration:none;
+    text-decoration: none;
     background-color: #59B2E0;
     height: 100px;
     width: 25%;
@@ -59,7 +59,6 @@ a{
     cursor:pointer;
 }
 
+.active{
 
-a:link {
-    text-decoration: none;
 }
