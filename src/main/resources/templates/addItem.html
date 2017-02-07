@@ -60,14 +60,22 @@
 
             $('#item-add').click(function (event) {
                 event.preventDefault();
+
+                var father_id = null;
+                var data = $('#fatherItem').select2('data');
+                if (data.size > 0) {
+                    father_id = data[0].id
+                }
+
                 CO.post({
                     url: /*[[@{/item/new}]]*/'',
                     data: {
                         title: $('#titleItem').val(),
-                        father: $('#fatherItem').select2('data')[0].id,
+                        father: father_id,
                         color: $('#cp2').colorpicker('getValue')
                     },
                     success: function () {
+                        window.location = /*[[@{/}]]*/'';
                     }
                 });
             });
