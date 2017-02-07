@@ -97,7 +97,7 @@ public class RecordController {
         recordRepository.save(record);
     }
 
-    @RequestMapping(value = "/running", method = RequestMethod.GET)
+    @RequestMapping(value = "/running", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public RecordDto isAnyRecordRunning(){
         Person person = SecurityService.getLoggedInPerson();
