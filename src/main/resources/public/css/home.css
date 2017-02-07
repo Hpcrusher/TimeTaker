@@ -39,23 +39,26 @@ footer {
 
 .kacheln{
     position:relative;
-    color:black;
+    color:inherit;
     display: table-cell;
-    font-family: Georgia;
-    font-size:28pt;
+    font-family: inherit;
+    font-size:23pt;
     font-style: normal;
     padding:2px;
     margin-top:5px;
     margin-bottom:5px;
     text-decoration: none;
     background-color: #59B2E0;
-    height: 100px;
+    height: 150px;
     width: 25%;
     text-align: center;
     vertical-align: middle;
     cursor:pointer;
 }
 
+.kacheln:hover{
+    text-decoration: none;
+}
 .active{
 
 }
