@@ -8,11 +8,15 @@ import java.time.LocalDateTime;
  */
 public class DateHelper {
 
-//    public static LocalDateTime getStartPointOf(LocalDateTime now){
-//        return now.get
-//    }
+    public static LocalDateTime now() {
+        return LocalDateTime.now(Clock.systemUTC());
+    }
 
-//    public static LocalDateTime getStartPointOfToday(){
-//        return getStartPointOf(LocalDateTime.now(Clock.systemUTC()));
-//    }
+    public static LocalDateTime startOfDayFrom(LocalDateTime someday) {
+        return LocalDateTime.of(someday.getYear(), someday.getMonth(), someday.getDayOfMonth(), 0, 0, 0);
+    }
+
+    public static LocalDateTime getStartOfToday() {
+        return startOfDayFrom(now());
+    }
 }

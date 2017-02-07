@@ -15,10 +15,15 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import timetakers.exception.ValidationRuntimeException;
 import timetakers.model.Item;
+import timetakers.model.Person;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
+import timetakers.repository.specification.RecordSpecification;
+import timetakers.services.SecurityService;
+import timetakers.util.TextKey;
 import timetakers.web.assembler.RecordAssembler;
 import timetakers.web.model.RecordDto;
 
@@ -63,7 +68,7 @@ public class RecordController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public void deleteRecord( @PathVariable UUID id ) {
+    public void deleteRecord( @RequestParam UUID id ) {
         recordRepository.delete(id);
     }
 
@@ -81,15 +86,29 @@ public class RecordController {
         recordRepository.save(record);
     }
 
-    @RequestMapping(value = "/udpate/end", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/{id}/update/end", method = RequestMethod.PATCH)
     @ResponseBody
-    public void updateRecordEndTime(@PathVariable UUID recordId, @PathVariable LocalDateTime endTime) {
-        Record record = recordRepository.getOne(recordId);
+    public void updateRecordEndTime(@PathVariable UUID id, @RequestParam LocalDateTime endTime) {
+        Record record = recordRepository.getOne(id);
         if (record == null) {
             throw new IllegalArgumentException( "Found no matching record");
         }
         record.setEnd(endTime);
         recordRepository.save(record);
+    }
+
+    @RequestMapping(value = "/running", method = RequestMethod.GET)
+    @ResponseBody
+    public RecordDto isAnyRecordRunning(){
+        Person person = SecurityService.getLoggedInPerson();
+        List<Record> list = recordRepository.findAll(new RecordSpecification(person, true));
+        if (list == null || list.size()==0){
+            return null;
+        }
+        if (list.size() > 1){
+            throw new ValidationRuntimeException(new TextKey("validation.toManyOpenRecord"),"");
+        }
+        return recordAssembler.toResource(list.get(0));
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

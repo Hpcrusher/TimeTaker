@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import timetakers.model.Item;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import timetakers.model.Person;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
@@ -28,7 +29,6 @@ import timetakers.web.model.RecordDto;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 
 /**
@@ -51,8 +51,16 @@ public class OverviewController {
         this.itemRepository = itemRepository;
     }
 
-//    @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-//    public List<RecordDto> getPersonWithIdAsJson(@PathVariable UUID person) {
-//        return recordRepository.findAll(new RecordSpecification(SecurityService.getLoggedInPerson(), DateHelper.getStartPointOf(LocalDateTime.now()), LocalDateTime.now(Clock.systemUTC())));
-//    }
+    @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public List<RecordDto> getPersonWithIdAsJson() {
+        Person loggedInPerson = SecurityService.getLoggedInPerson();
+        List<Record> something = recordRepository.findAll(
+                new RecordSpecification(
+                        loggedInPerson,
+                        DateHelper.getStartOfToday(),
+                        LocalDateTime.now(Clock.systemUTC())
+                )
+        );
+        return recordAssembler.toResources(something);
+    }
 }
