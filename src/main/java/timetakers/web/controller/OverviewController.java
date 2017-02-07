@@ -16,15 +16,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import timetakers.model.Person;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
+import timetakers.repository.specification.ItemSpecification;
 import timetakers.repository.specification.RecordSpecification;
 import timetakers.services.SecurityService;
 import timetakers.util.DateHelper;
 import timetakers.web.assembler.RecordAssembler;
-import timetakers.web.model.RecordDto;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -52,7 +53,7 @@ public class OverviewController {
     }
 
     @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public List<RecordDto> getPersonWithIdAsJson() {
+    public ModelAndView getPersonWithIdAsJson() {
         Person loggedInPerson = SecurityService.getLoggedInPerson();
         List<Record> something = recordRepository.findAll(
                 new RecordSpecification(
@@ -61,6 +62,9 @@ public class OverviewController {
                         LocalDateTime.now(Clock.systemUTC())
                 )
         );
-        return recordAssembler.toResources(something);
+
+        ModelAndView modelAndView = new ModelAndView("overview");
+        modelAndView.addObject("records", recordAssembler.toResources(something));
+        return modelAndView;
     }
 }
