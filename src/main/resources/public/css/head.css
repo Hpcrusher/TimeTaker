@@ -3,16 +3,11 @@
     @author Volker Mertens
     @version 1.0
  */
-a{
 
-}
 .headerPointer{
     cursor:pointer;
 }
 
-ul{
-
-}
 
 .dropdown,.dropup{position:relative}
 .dropdown-toggle:focus{outline:0}
