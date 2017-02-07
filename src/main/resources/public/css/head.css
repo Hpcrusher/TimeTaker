@@ -29,11 +29,7 @@ ul{
 .dropdown-menu-left{right:auto;left:0}
 .dropdown-header{display:block;padding:3px 20px;font-size:12px;line-height:1.42857143;color:#777;white-space:nowrap}
 
-span{
-    display: table-cell;
-    vertical-align: middle;
-}
-.pulse {
+span.pulse {
     display: block;
     margin-top: 18px;
     margin-right: 10px;
