@@ -11,12 +11,15 @@
 package timetakers.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import timetakers.model.Item;
 import timetakers.repository.ItemRepository;
+import timetakers.repository.specification.ItemSpecification;
 import timetakers.services.SecurityService;
 import timetakers.web.assembler.ItemAssembler;
 import timetakers.web.model.ItemDto;
@@ -47,7 +50,10 @@ public class ItemController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
     public void postNewItem( @RequestBody ItemDto itemDto ) {
-        Item father = itemRepository.getOne(itemDto.father);
+        Item father = null;
+        if (itemDto.father != null) {
+            father = itemRepository.getOne(itemDto.father);
+        }
         Item item = Item.builder()
                 .withTitle(itemDto.title)
                 .withPerson(SecurityService.getLoggedInPerson())
@@ -58,8 +64,8 @@ public class ItemController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ItemDto> getItemAsJson() {
-        return itemAssembler.toResources(itemRepository.findAll());
+    public List<ItemDto> getItemAsJson(@RequestParam(required = false) String search, @PageableDefault(size = 20, sort = "title")Pageable pageable) {
+        return itemAssembler.toResources(itemRepository.findAll( new ItemSpecification(SecurityService.getLoggedInPerson(), search),pageable));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

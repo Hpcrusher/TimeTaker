@@ -1,6 +1,5 @@
 package timetakers.repository.specification;
 
-import org.hibernate.Criteria;
 import org.springframework.data.jpa.domain.Specification;
 import timetakers.model.Item;
 import timetakers.model.Person;
@@ -10,7 +9,6 @@ import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Martin Geßenich on 26.01.2017.

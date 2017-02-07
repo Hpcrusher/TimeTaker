@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import timetakers.repository.ItemRepository;
+import timetakers.repository.specification.ItemSpecification;
+import timetakers.services.SecurityService;
 import timetakers.web.assembler.ItemAssembler;
 
 /**
@@ -41,7 +43,7 @@ public class HomeController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getHomeAsHtml() {
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("items", itemAssembler.toResources(itemRepository.findAll()));
+        modelAndView.addObject("items", itemAssembler.toResources(itemRepository.findAll(new ItemSpecification(SecurityService.getLoggedInPerson(), null))));
         return modelAndView;
     }
 

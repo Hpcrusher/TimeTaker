@@ -16,12 +16,38 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker'], function($,CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker', 'select2'], function($,CO) {
             $('#cp2').colorpicker({
                 color: getRandomColor(),
                 format: 'hex'
             });
-            console.log('Test');
+
+            $('#fatherItem').select2({
+                ajax: {
+                    url: /*[[@{/item}]]*/'',
+                    dataType: 'json',
+                    type: "GET",
+                    delay: 250,
+                    data: function (params) {
+                        // Query paramters will be ?search=[term]&page=[page]
+                        return {
+                            search: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    id: item.oid,
+                                    text: item.title
+                                };
+                            })
+                        }
+                    },
+                    cache: true
+                }
+            });
 
             function getRandomColor() {
                 var letters = '0123456789ABCDEF';
@@ -38,11 +64,10 @@
                     url: /*[[@{/item/new}]]*/'',
                     data: {
                         title: $('#titleItem').val(),
-                        father: $('#fatherItem').val(),
+                        father: $('#fatherItem').select2('data')[0].id,
                         color: $('#cp2').colorpicker('getValue')
                     },
                     success: function () {
-                        toggleMode();
                     }
                 });
             });
@@ -51,6 +76,7 @@
     </script>
     <link rel="stylesheet" th:href="@{/css/addItem.css}"/>
     <link rel="stylesheet" th:href="@{/css/3rd/bootstrap-colorpicker.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/3rd/select2.min.css}"/>
 </head>
 <body>
 <div layout:fragment="content">
@@ -66,7 +92,7 @@
                                         <input type="text" name="title" id="titleItem" tabindex="1" class="form-control" th:placeholder="#{addItem.title}" value=""/>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" name="father" id="fatherItem" tabindex="2" class="form-control" th:placeholder="#{addItem.father}" value=""/>
+                                        <select id="fatherItem" tabindex="2" class="form-control" th:placeholder="#{addItem.father}"></select>
                                     </div>
                                     <div class="form-group">
                                         <div id="cp2" class="input-group colorpicker-component">
@@ -77,12 +103,14 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                                <input type="submit" name="item-add" id="item-add" tabindex="4" class="form-control btn btn-add" th:value="#{addItem.add}"/>
+                                                <button id="item-add" tabindex="4" class="form-control btn btn-add" >
+                                                    <span th:text="#{addItem.add}">Add Item</span>
+                                                </button>
                                             </div>
                                             <div class="col-sm-6">
-                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                                <a th:href="@{/}" id="item-cancel" tabindex="5" class="form-control btn btn-cancel" th:text="#{addItem.cancel}"><span >Cancel</span></a>
+                                                <a th:href="@{/}" id="item-cancel" class="form-control btn btn-cancel" tabindex="5">
+                                                    <span th:text="#{addItem.cancel}">Cancel</span>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

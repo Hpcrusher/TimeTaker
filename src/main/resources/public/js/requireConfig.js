@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2017 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -19,16 +20,14 @@ requirejs.config({
         jquery: '3rd/jquery-3.1.1.min',
         bootstrap: '3rd/bootstrap.min',
         connnector: 'connector',
-        colorpicker: '3rd/bootstrap-colorpicker.min'
-        //color: '3rd/colorpicker-color',
-        //colorpickerDefault: '3rd/colorpicker-defaults',
-        //colorpickerWrapper: '3rd/colorpicker-plugin-wrapper'
+        colorpicker: '3rd/bootstrap-colorpicker.min',
+        select2: '3rd/select2.min'
     },
     shim: {
         jquery: { "exports": "$"},
         bootstrap: ['jquery'],
         connector: ['jquery'],
-        colorpicker: ['jquery', 'bootstrap']
-        //colorpicker: ['bootstrap', 'color', 'colorpickerDefault', 'colorpickerWrapper']
+        colorpicker: ['jquery', 'bootstrap'],
+        select2: ['jquery']
     }
 });
