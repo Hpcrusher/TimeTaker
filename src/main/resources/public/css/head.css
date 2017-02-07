@@ -28,3 +28,45 @@ ul{
 .dropdown-menu-right{right:0;left:auto}
 .dropdown-menu-left{right:auto;left:0}
 .dropdown-header{display:block;padding:3px 20px;font-size:12px;line-height:1.42857143;color:#777;white-space:nowrap}
+
+span{
+    display: table-cell;
+    vertical-align: middle;
+}
+.pulse {
+    display: block;
+    margin-top: 18px;
+    margin-right: 10px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #FF5733;
+    box-shadow: 0 0 0 rgba(204,70,41, 0.4);
+    animation: pulse 1.5s infinite;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(204,70,41, 0.4);
+    }
+    70% {
+        -webkit-box-shadow: 0 0 0 10px rgba(204,70,41, 0);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(204,70,41, 0);
+    }
+}
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(204,70,41, 0.4);
+        box-shadow: 0 0 0 0 rgba(204,70,41, 0.4);
+    }
+    70% {
+        -moz-box-shadow: 0 0 0 10px rgba(204,70,41, 0);
+        box-shadow: 0 0 0 10px rgba(204,70,41, 0);
+    }
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(204,70,41, 0);
+        box-shadow: 0 0 0 0 rgba(204,70,41, 0);
+    }
+}
