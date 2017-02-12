@@ -16,37 +16,14 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker', 'select2'], function($,CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker', 'ttSelect'], function($,CO) {
             $('#cp2').colorpicker({
                 color: getRandomColor(),
                 format: 'hex'
             });
 
-            $('#fatherItem').select2({
-                ajax: {
-                    url: /*[[@{/item}]]*/'',
-                    dataType: 'json',
-                    type: "GET",
-                    delay: 250,
-                    data: function (params) {
-                        // Query paramters will be ?search=[term]&page=[page]
-                        return {
-                            search: params.term,
-                            page: params.page
-                        };
-                    },
-                    processResults: function (data, params) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    id: item.oid,
-                                    text: item.title
-                                };
-                            })
-                        }
-                    },
-                    cache: true
-                }
+            $('#fatherItem').ttSelect({
+                url: /*[[@{/item}]]*/''
             });
 
             function getRandomColor() {
@@ -62,7 +39,7 @@
                 event.preventDefault();
 
                 var father_id = null;
-                var data = $('#fatherItem').select2('data');
+                var data = $('#fatherItem').ttSelect('data');
                 if (data.length > 0) {
                     father_id = data[0].id
                 }
@@ -82,8 +59,6 @@
         });
         /*]]>*/
     </script>
-    <link rel="stylesheet" th:href="@{/css/3rd/bootstrap-colorpicker.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/3rd/select2.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/addItem.css}"/>
 </head>
 <body>

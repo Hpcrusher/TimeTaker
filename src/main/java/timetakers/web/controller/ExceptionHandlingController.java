@@ -13,11 +13,7 @@ package timetakers.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import timetakers.exception.ForbiddenRuntimeException;
 import timetakers.exception.ValidationRuntimeException;
@@ -30,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author David Liebl
  */
 
-@Controller
+@ControllerAdvice
 public class ExceptionHandlingController {
 
     private final TextKeyResolver textKeyResolver;
@@ -42,6 +38,7 @@ public class ExceptionHandlingController {
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = ValidationRuntimeException.class)
+    @ResponseBody
     public ErrorDto validationFailed(ValidationRuntimeException exception) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.elementId = exception.getElementId();
@@ -51,12 +48,11 @@ public class ExceptionHandlingController {
 
     @ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = ForbiddenRuntimeException.class)
-    public ModelAndView notAuthorized(ForbiddenRuntimeException exception) {
-        ModelAndView modelAndView = new ModelAndView("error");
+    @ResponseBody
+    public ErrorDto notAuthorized(ForbiddenRuntimeException exception) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.message = textKeyResolver.resolveTextKey(exception.getTextKey());
-        modelAndView.addObject("errorInformation", errorDto);
-        return modelAndView;
+        return errorDto;
     }
 
 

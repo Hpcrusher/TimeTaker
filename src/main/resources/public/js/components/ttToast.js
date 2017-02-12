@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2017 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
+ * Copyright (c) 2016 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -9,38 +8,27 @@
  *
  */
 
-requirejs.config({
-    baseUrl: '/js',
-    wrapShim: true,
-    paths: {
-        //require.js plugins
-        domReady: '3rd/domReady.min',
+/**
+ * @author David Liebl
+ */
 
-        // 3rd party
-        jquery: '3rd/jquery-3.1.1.min',
-        bootstrap: '3rd/bootstrap.min',
-        colorpicker: '3rd/bootstrap-colorpicker.min',
+(function ($) {
 
-        // internal use only
-        select2: '3rd/select2.min',
-        jquery_toast: '3rd/jquery.toast.min',
-
-        // Wrapper
-        connnector: 'connector',
-        ttToast: 'components/ttToast',
-        ttSelect: 'components/ttSelect'
-    },
-    shim: {
-        jquery: { "exports": "$"},
-        bootstrap: ['jquery'],
-        colorpicker: ['jquery', 'bootstrap'],
-
-        // internal use only
-        select2: ['jquery'],
-
-        // Wrapper
-        connector: ['jquery'],
-        ttToast: ['jquery', 'jquery_toast'],
-        ttSelect: ['jquery', 'select2']
+    function getDefaultSettings() {
+        return {
+            loader: true,
+            hideAfter: 3000,
+            showHideTransition: 'fade',
+            allowToastClose: true,
+            textAlign: 'center',
+            icon: false,
+            position: 'bottom-right'
+        }
     }
-});
+
+    $.ttToast = function (options) {
+        var settings = $.extend(getDefaultSettings(), options);
+        $.toast(settings);
+    }
+
+})(jQuery);

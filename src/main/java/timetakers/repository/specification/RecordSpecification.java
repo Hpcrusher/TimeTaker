@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Martin Geßenich on 26.01.2017.
+ * @author Martin Geßenich
  */
 public class RecordSpecification implements Specification<Record> {
 
@@ -41,8 +41,6 @@ public class RecordSpecification implements Specification<Record> {
     @Override
     public Predicate toPredicate(Root<Record> record, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
         Join<Item, Record> item = record.join("item", JoinType.INNER);
-//        Predicate joinPredicate = cb.equal(item.get("id"), record.get("id"));
-//        item = item.on(joinPredicate);
 
         List<Predicate> predicates = new ArrayList<>();
 

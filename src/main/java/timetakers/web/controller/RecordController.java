@@ -21,8 +21,9 @@ import timetakers.model.Person;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
-import timetakers.repository.specification.RecordSpecification;
+import timetakers.services.RecordService;
 import timetakers.services.SecurityService;
+import timetakers.util.DateHelper;
 import timetakers.util.TextKey;
 import timetakers.web.assembler.RecordAssembler;
 import timetakers.web.model.RecordDto;
@@ -44,26 +45,41 @@ public class RecordController {
     private RecordRepository recordRepository;
     private RecordAssembler recordAssembler;
     private ItemRepository itemRepository;
+    private RecordService recordService;
 
     @Autowired
-    public RecordController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository) {
+    public RecordController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository, RecordService recordService) {
         this.recordRepository = recordRepository;
         this.recordAssembler = recordAssembler;
         this.itemRepository = itemRepository;
+        this.recordService = recordService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
     public void createRecord( @RequestBody RecordDto recordDto ) {
-        Item item = itemRepository.getOne(recordDto.item);
-        Record record = Record.builder()
-                .withComment(recordDto.comment)
-                .withItem(item)
-                .withStart(recordDto.start)
-                .withEnd(recordDto.end)
-                .createRecord();
+        Person loggedInPerson = SecurityService.getLoggedInPerson();
+        Record runniningRecord = recordService.getRunniningRecord(loggedInPerson);
 
-        recordRepository.save(record);
+        if (runniningRecord != null) {
+            runniningRecord.setEnd(DateHelper.now());
+            recordRepository.save(runniningRecord);
+        }
+
+        if (runniningRecord == null || !(runniningRecord.getItem().getId().equals(recordDto.itemId))) {
+            Item item = itemRepository.getOne(recordDto.itemId);
+            if (item == null) {
+                throw new ValidationRuntimeException(new TextKey("", ""), "");
+            }
+            Record record = Record.builder()
+                    .withComment(recordDto.comment)
+                    .withItem(item)
+                    .withStart(recordDto.start)
+                    .withEnd(recordDto.end)
+                    .createRecord();
+
+            recordRepository.save(record);
+        }
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -82,7 +98,7 @@ public class RecordController {
         record.setComment(recordDto.comment);
         record.setStart(recordDto.start);
         record.setEnd(recordDto.end);
-        record.setItem(itemRepository.getOne(recordDto.item));
+        record.setItem(itemRepository.getOne(recordDto.itemId));
         recordRepository.save(record);
     }
 
@@ -101,14 +117,7 @@ public class RecordController {
     @ResponseBody
     public RecordDto isAnyRecordRunning(){
         Person person = SecurityService.getLoggedInPerson();
-        List<Record> list = recordRepository.findAll(new RecordSpecification(person, true));
-        if (list == null || list.size()==0){
-            return null;
-        }
-        if (list.size() > 1){
-            throw new ValidationRuntimeException(new TextKey("validation.toManyOpenRecord"),"");
-        }
-        return recordAssembler.toResource(list.get(0));
+        return recordAssembler.toResource(recordService.getRunniningRecord(person));
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

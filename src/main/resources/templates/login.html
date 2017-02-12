@@ -56,7 +56,6 @@
         /*]]>*/
     </script>
     <!-- configuration to design footer and login page -->
-    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
     <link rel="stylesheet" th:href="@{/css/login.css}"/>
 </head>
 <body>
@@ -68,10 +67,10 @@
                         <div class="row">
                             <div class="col-md-4"><img th:src="@{/img/time_taker_logo.png}" alt="Selfhtml" style = "margin-bottom: 5%"/></div>
                         </div>
-                        <div th:if="${param.error}">
+                        <div th:if="${param.error}" class="alert alert-danger">
                             <span th:text="#{login.incorrectCredentials}">Invalid username or password.</span>
                         </div>
-                        <div th:if="${param.logout}">
+                        <div th:if="${param.logout}" class="alert alert-success">
                             You have been logged out.
                         </div>
                         <div class="panel panel-login">

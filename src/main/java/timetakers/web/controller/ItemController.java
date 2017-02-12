@@ -16,11 +16,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import timetakers.exception.ValidationRuntimeException;
 import timetakers.model.Item;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.specification.ItemSpecification;
 import timetakers.services.SecurityService;
+import timetakers.util.TextKey;
 import timetakers.web.assembler.ItemAssembler;
 import timetakers.web.model.ItemDto;
 
@@ -53,6 +56,9 @@ public class ItemController {
         Item father = null;
         if (itemDto.father != null) {
             father = itemRepository.getOne(itemDto.father);
+        }
+        if (StringUtils.isEmpty(itemDto.title)) {
+            throw new ValidationRuntimeException(new TextKey("item.validation.emptyTitle"), "title");
         }
         Item item = Item.builder()
                 .withTitle(itemDto.title)

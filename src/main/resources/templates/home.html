@@ -16,19 +16,22 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'bootstrap'], function($, CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttToast'], function($, CO) {
             $('.kacheln').click(function (event) {
                 event.preventDefault();
                 CO.post({
                     url: /*[[@{/record/new}]]*/'',
                     data: {
-                        item: $(this).data('id'),
+                        itemId: $(this).data('id'),
                         comment: null,
                         start:  (new Date).toISOString(),
                         end: null
                     },
                     success: function () {
-                        alert("Hello! I am an alert box!!");
+                        $.ttToast({
+                            text: /*[[#{record.started}]]*/'',
+                            icon: 'success'
+                        });
                     }
                 });
             });
@@ -54,7 +57,7 @@
         <div class="row">
             <th:block th:each="item : ${items}">
                 <div class="col-md-3 portfolio-item">
-                    <a th:id="${item.oid}" class="kacheln" th:text="${item.title}" th:attr="data-id=${item.oid}"/>
+                    <a th:id="${item.oid}" class="kacheln" th:text="${item.title}" th:attr="data-id=${item.oid}"></a>
                 </div>
             </th:block>
         </div>

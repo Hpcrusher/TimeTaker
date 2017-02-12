@@ -8,32 +8,46 @@
  *
  */
 
-package timetakers.web.assembler;
+package timetakers.services;
 
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import timetakers.model.Person;
 import timetakers.model.Record;
-import timetakers.web.model.RecordDto;
+import timetakers.repository.RecordRepository;
+import timetakers.repository.specification.RecordSpecification;
+import timetakers.util.DateHelper;
+
+import java.util.List;
 
 /**
- * @author Martin Geßenich
+ * @author David Liebl
  */
 
-@Component
-public class RecordAssembler extends ResourceAssemblerSupport<Record, RecordDto> {
+@Service
+public class RecordService {
 
-    public RecordAssembler() {
-        super(RecordAssembler.class, RecordDto.class);
+    private RecordRepository recordRepository;
+
+    @Autowired
+    public RecordService(RecordRepository recordRepository) {
+        this.recordRepository = recordRepository;
     }
 
-    @Override
-    public RecordDto toResource(Record record) {
-        RecordDto dto  = new RecordDto();
-        dto.oid = record.getId();
-        dto.comment = record.getComment();
-        dto.itemId = record.getItem().getId();
-        dto.start = record.getStart();
-        dto.end = record.getEnd();
-        return dto;
+    public Record getRunniningRecord(Person person) {
+        List<Record> records = recordRepository.findAll(new RecordSpecification(person, true));
+        if (records.size() == 0) {
+            return null;
+        } else if (records.size() == 1) {
+            return records.get(0);
+        } else {
+            // if there schould be more than one open record all will be closed
+            records.forEach(record -> {
+                record.setEnd(DateHelper.now());
+                recordRepository.save(record);
+            });
+            return null;
+        }
     }
+
 }

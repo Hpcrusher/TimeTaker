@@ -14,27 +14,12 @@
       layout:decorator="layouts/single">
 <head>
     <title th:text="#{overview.title}"></title>
-    <!--<script th:inline="javascript">-->
-        <!--/*<![CDATA[*/-->
-        <!--requireDomReady(['jquery', 'connector', 'bootstrap'], function($, CO) {-->
-            <!--$('.kacheln').click(function (event) {-->
-                <!--event.preventDefault();-->
-                <!--CO.post({-->
-                    <!--url: /*[[@{/record/new}]]*/'',-->
-                    <!--data: {-->
-                        <!--item: $(this).data('id'),-->
-                        <!--comment: null,-->
-                        <!--start:  (new Date).toISOString(),-->
-                        <!--end: null-->
-                    <!--},-->
-                    <!--success: function () {-->
-                        <!--alert("Hello! I am an alert box!!");-->
-                    <!--}-->
-                <!--});-->
-            <!--});-->
-        <!--});-->
-        <!--/*]]>*/-->
-    <!--</script>-->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        requireDomReady(['jquery', 'bootstrap'], function($) {
+        });
+        /*]]>*/
+    </script>
     <link rel="stylesheet" th:href="@{/css/overview.css}"/>
 </head>
 <body>
@@ -45,7 +30,7 @@
         <!-- Page Heading -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header" th:text="#{overview.title}">Page Heading </h1>
+                <h1 class="page-header" th:text="#{overview.title}">Page Heading</h1>
             </div>
         </div>
         <!-- /.row -->
@@ -54,7 +39,7 @@
         <div class="row">
             <th:block th:each="record : ${records}">
                 <div class="col-md-3 overview-item">
-                    <p th:id="${record.oid}" class="overviews" th:text="'Von '+${record.start}+' bis '+${record.end}+' , Kommentar '+${record.comment}" th:attr="data-id=${record.oid}"/>
+                    <span th:id="${record.oid}" class="overviews" th:text="'Von '+${record.start}+' bis '+${record.end}+' , Kommentar '+${record.comment}" th:attr="data-id=${record.oid}"></span>
                 </div>
             </th:block>
         </div>

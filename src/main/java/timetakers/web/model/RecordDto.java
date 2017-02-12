@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Created by Martin Geßenich on 16.01.2017.
+ * @author Martin Geßenich
  */
 public class RecordDto extends IdDto{
 
-    public UUID item;
+    public UUID itemId;
     public String comment;
     public LocalDateTime start;
     public LocalDateTime end;
