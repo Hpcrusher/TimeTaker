@@ -33,16 +33,6 @@ public class Setting extends AbstractIdEntity {
     @JoinColumn(name = "person_id")
     private Person person;
 
-    public Setting() {
-    }
-
-    public Setting(String key, String value, Person person) {
-        this.id = UUID.randomUUID();
-        this.key = key;
-        this.value = value;
-        this.person = person;
-    }
-
     public String getKey() {
         return key;
     }
@@ -67,5 +57,46 @@ public class Setting extends AbstractIdEntity {
         this.person = person;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
 
+    public static final class Builder {
+        protected UUID id = UUID.randomUUID();
+        private String key;
+        private String value;
+        private Person person;
+
+        private Builder() {
+        }
+
+        public Builder withKey(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public Builder withValue(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public Builder withId(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withPerson(Person person) {
+            this.person = person;
+            return this;
+        }
+
+        public Setting build() {
+            Setting setting = new Setting();
+            setting.setId(id);
+            setting.setPerson(person);
+            setting.setKey(key);
+            setting.setValue(value);
+            return setting;
+        }
+    }
 }

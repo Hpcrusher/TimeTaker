@@ -46,7 +46,7 @@ public class DBLocaleResolver implements LocaleResolver {
         }
         Setting localeSetting = settingRepository.findByKeyAndPerson(SETTING_KEY, loggedInPerson);
         if (localeSetting == null) {
-            localeSetting = settingRepository.save(new Setting(SETTING_KEY, "de_DE", loggedInPerson));
+            localeSetting = settingRepository.save(Setting.builder().withKey(SETTING_KEY).withValue("de_DE").withPerson(loggedInPerson).build());
         }
         String[] locale = localeSetting.getValue().split("_");
         return new Locale(locale[0], locale[1]);
@@ -60,7 +60,7 @@ public class DBLocaleResolver implements LocaleResolver {
         }
         Setting localeSetting = settingRepository.findByKeyAndPerson(SETTING_KEY, loggedInPerson);
         if (localeSetting == null) {
-            settingRepository.save(new Setting(SETTING_KEY, locale.getLanguage() + "_" + locale.getCountry(), loggedInPerson));
+            settingRepository.save(Setting.builder().withKey(SETTING_KEY).withValue(locale.getLanguage() + "_" + locale.getCountry()).withPerson(loggedInPerson).build());
         } else {
             localeSetting.setValue( locale.getLanguage() + "_" + locale.getCountry());
             settingRepository.save(localeSetting);

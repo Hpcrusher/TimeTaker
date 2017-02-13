@@ -36,9 +36,6 @@ public class Record extends AbstractIdEntity {
     @Column(name = "end_time")
     private LocalDateTime end;
 
-    public Record() {
-    }
-
     public Item getItem() {
         return item;
     }

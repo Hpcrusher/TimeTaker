@@ -40,9 +40,6 @@ public class Item extends AbstractIdEntity {
     @Convert(converter = ColorConverter.class)
     private Color color;
 
-    public Item() {
-    }
-
     public String getTitle() {
         return title;
     }
@@ -63,7 +60,7 @@ public class Item extends AbstractIdEntity {
         return father;
     }
 
-    public void setfather(Item father) {
+    public void setFather(Item father) {
         this.father = father;
     }
 
@@ -116,7 +113,7 @@ public class Item extends AbstractIdEntity {
             item.setId(id);
             item.setTitle(title);
             item.setPerson(person);
-            item.setfather(father);
+            item.setFather(father);
             item.setColor(color);
             return item;
         }

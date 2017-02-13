@@ -43,8 +43,6 @@ public class User extends AbstractIdEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles = new HashSet<>();
 
-    public User() {}
-
     public String getUserName() {
         return userName;
     }
