@@ -37,12 +37,11 @@ footer {
 }
 
 
-.kacheln{
+.kachel{
     position:relative;
     color:inherit;
     display: table-cell;
     font-family: inherit;
-    font-size:23pt;
     font-style: normal;
     padding:2px;
     margin-top:5px;
@@ -50,13 +49,22 @@ footer {
     text-decoration: none;
     background-color: #59B2E0;
     height: 150px;
-    width: 210px;
+    width: 100pc;
     text-align: center;
     vertical-align: middle;
     cursor:pointer;
 }
 
-.kacheln:hover{
+.kachel .title{
+    font-size:23pt;
+    word-wrap: break-word;
+}
+
+.kachel .father-title{
+    font-size:12pt;
+    word-wrap: break-word;
+}
+.kachel:hover{
     text-decoration: none;
 }
 .active{

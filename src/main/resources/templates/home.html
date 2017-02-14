@@ -88,7 +88,7 @@
             var postItemId=null;
             var getItemId=null;
 
-            $('.kacheln').click(function (event) {
+            $('.kachel').click(function (event) {
                 postItemId= $(this).data('id');
                 event.preventDefault();
                 CO.post({
@@ -146,8 +146,17 @@
         <!-- Projects Row -->
         <div class="row">
             <th:block th:each="item : ${items}">
-                <div class="col-md-3 portfolio-item">
-                    <a th:id="${item.oid}" class="kacheln" th:text="${item.title}" th:attr="data-id=${item.oid}"></a>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
+                    <a class="kachel" th:attr="data-id=${item.oid}">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <span class="father-title" th:text="${item.fatherTitle}"></span>
+                            </div>
+                            <div class="col-sm-12">
+                                <span class="title" th:text="${item.title}"></span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </th:block>
         </div>
