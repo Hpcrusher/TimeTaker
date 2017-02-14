@@ -33,6 +33,10 @@ public class ItemAssembler extends ResourceAssemblerSupport<Item, ItemDto> {
         dto.title = item.getTitle();
         dto.person = item.getPerson().getId();
         dto.father = item.getFather() == null ? null : item.getFather().getId();
+        final Item father = item.getFather();
+        if (father != null) {
+            dto.fatherTitle = father.getTitle();
+        }
         dto.color = item.getColor() == null ? null : Integer.toHexString(item.getColor().getRGB());
         return dto;
     }
