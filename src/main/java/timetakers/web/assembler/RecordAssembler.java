@@ -28,6 +28,9 @@ public class RecordAssembler extends ResourceAssemblerSupport<Record, RecordDto>
 
     @Override
     public RecordDto toResource(Record record) {
+        if (record == null){
+            return null;
+        }
         RecordDto dto  = new RecordDto();
         dto.oid = record.getId();
         dto.comment = record.getComment();
