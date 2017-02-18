@@ -38,6 +38,13 @@ public class RecordSpecification implements Specification<Record> {
         this.hasNoEndTime = hasNoEndTime;
     }
 
+    public RecordSpecification(Person person) {
+        this.person = person;
+        this.start = null;
+        this.end = null;
+        this.hasNoEndTime = false;
+    }
+
     @Override
     public Predicate toPredicate(Root<Record> record, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
         Join<Item, Record> item = record.join("item", JoinType.INNER);

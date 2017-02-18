@@ -32,7 +32,7 @@ public class Item extends AbstractIdEntity {
     @JoinColumn(name = "person_id")
     private Person person;
 
-    @ManyToOne(targetEntity = Item.class)
+    @ManyToOne(targetEntity = Item.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "father_id")
     private Item father;
 

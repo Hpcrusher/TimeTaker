@@ -11,16 +11,19 @@
 package timetakers.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import timetakers.repository.ItemRepository;
-import timetakers.repository.specification.ItemSpecification;
-import timetakers.services.SecurityService;
+import timetakers.services.ItemService;
 import timetakers.web.assembler.ItemAssembler;
+import timetakers.web.model.ItemDto;
+
+import java.util.List;
 
 /**
  * @author David Liebl
@@ -31,19 +34,23 @@ import timetakers.web.assembler.ItemAssembler;
 @RequestMapping(value = "/")
 public class HomeController {
 
-    private ItemRepository itemRepository;
+    private ItemService itemService;
     private ItemAssembler itemAssembler;
 
     @Autowired
-    public HomeController(ItemRepository itemRepository, ItemAssembler itemAssembler) {
-        this.itemRepository = itemRepository;
+    public HomeController(ItemService itemService, ItemAssembler itemAssembler) {
+        this.itemService = itemService;
         this.itemAssembler = itemAssembler;
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getHomeAsHtml() {
+    public ModelAndView getHomeAsHtml(@PageableDefault(size = 8, sort = "start")Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("items", itemAssembler.toResources(itemRepository.findAll(new ItemSpecification(SecurityService.getLoggedInPerson(), null))));
+        final List<ItemDto> itemDtos = itemAssembler.toResources(itemService.getLastUsedItems(pageable));
+        if (itemDtos.size() > 0) {
+            itemDtos.get(itemDtos.size() - 1).aktive = true;
+        }
+        modelAndView.addObject("items", itemDtos);
         return modelAndView;
     }
 

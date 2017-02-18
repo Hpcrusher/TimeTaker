@@ -20,6 +20,7 @@ requirejs.config({
         jquery: '3rd/jquery-3.1.1.min',
         bootstrap: '3rd/bootstrap.min',
         colorpicker: '3rd/bootstrap-colorpicker.min',
+        jsRender: '3rd/jsrender.min',
 
         // internal use only
         select2: '3rd/select2.min',
@@ -34,6 +35,7 @@ requirejs.config({
         jquery: { "exports": "$"},
         bootstrap: ['jquery'],
         colorpicker: ['jquery', 'bootstrap'],
+        jsRender: ['jquery'],
 
         // internal use only
         select2: ['jquery'],

@@ -8,21 +8,37 @@
  *
  */
 
-package timetakers.web.model;
+package timetakers.services;
 
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import timetakers.model.Item;
+import timetakers.model.Record;
+import timetakers.repository.RecordRepository;
+import timetakers.repository.specification.RecordSpecification;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Created by Martin Geßenich on 16.01.2017.
+ * @author David Liebl
  */
-public class ItemDto extends IdDto{
 
-    public String title;
-    public UUID father;
-    public UUID person;
-    public String color;
+@Service
+public class ItemService {
 
-    //Display only
-    public String fatherTitle;
-    public Boolean aktive;
+    private final RecordRepository recordRepository;
+
+    @Autowired
+    public ItemService(RecordRepository recordRepository) {
+        this.recordRepository = recordRepository;
+    }
+
+    public List<Item> getLastUsedItems(Pageable pageable) {
+        RecordSpecification specification = new RecordSpecification(SecurityService.getLoggedInPerson());
+        final List<Record> records = recordRepository.findAll(specification, pageable).getContent();
+        return records.stream().map(Record::getItem).distinct().collect(Collectors.toList());
+    }
+
 }

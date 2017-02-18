@@ -22,13 +22,16 @@ import timetakers.exception.ValidationRuntimeException;
 import timetakers.model.Item;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.specification.ItemSpecification;
+import timetakers.services.ItemService;
 import timetakers.services.SecurityService;
 import timetakers.util.TextKey;
 import timetakers.web.assembler.ItemAssembler;
 import timetakers.web.model.ItemDto;
 
 import java.awt.*;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -43,11 +46,13 @@ public class ItemController {
 
     private ItemRepository itemRepository;
     private ItemAssembler itemAssembler;
+    private ItemService itemService;
 
     @Autowired
-    public ItemController(ItemRepository itemRepository, ItemAssembler itemAssembler) {
+    public ItemController(ItemRepository itemRepository, ItemAssembler itemAssembler, ItemService itemService) {
         this.itemRepository = itemRepository;
         this.itemAssembler = itemAssembler;
+        this.itemService = itemService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -74,9 +79,39 @@ public class ItemController {
         return itemAssembler.toResources(itemRepository.findAll( new ItemSpecification(SecurityService.getLoggedInPerson(), search),pageable));
     }
 
+    @RequestMapping(value = "/lastused", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ItemDto> getLastUsedItemsAsJson(@PageableDefault(size = 8, sort = "start")Pageable pageable) {
+        List<ItemDto> itemDtos = itemAssembler.toResources(itemService.getLastUsedItems(pageable));
+        if (itemDtos.size() > 0) {
+            itemDtos.get(itemDtos.size() - 1).aktive = true;
+        }
+        return itemDtos;
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ItemDto getItemWithIdAsJson(@PathVariable UUID id) {
         return itemAssembler.toResource(itemRepository.findOne(id));
+    }
+
+    @RequestMapping(value = "/{id}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ItemDto> getChildrenOfItemAsJson(@PathVariable UUID id) {
+        Item father = itemRepository.getOne(id);
+        List<Item> items = itemRepository.findByPersonAndFather(SecurityService.getLoggedInPerson(), father);
+        return itemAssembler.toResources(items);
+    }
+
+    @RequestMapping(value = "/{id}/haschildren", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Boolean> getItemHasChildrenOfItemAsJson(@PathVariable UUID id) {
+        Item father = itemRepository.getOne(id);
+        return Collections.singletonMap("children", itemRepository.countByPersonAndFather(SecurityService.getLoggedInPerson(), father) > 0);
+    }
+
+
+    @RequestMapping(value = "/root", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ItemDto> getRootItemsAsJson() {
+        List<Item> items = itemRepository.findByPersonAndFather(SecurityService.getLoggedInPerson(), null);
+        return itemAssembler.toResources(items);
     }
 
 }

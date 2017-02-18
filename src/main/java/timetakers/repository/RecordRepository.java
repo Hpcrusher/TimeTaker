@@ -13,7 +13,6 @@ package timetakers.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import timetakers.model.Item;
 import timetakers.model.Record;
 
 import java.util.UUID;

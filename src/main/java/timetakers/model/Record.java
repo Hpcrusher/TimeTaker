@@ -23,7 +23,7 @@ import java.util.UUID;
 @Table(name = "record")
 public class Record extends AbstractIdEntity {
 
-    @ManyToOne(optional = false, targetEntity = Item.class)
+    @ManyToOne(optional = false, targetEntity = Item.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 

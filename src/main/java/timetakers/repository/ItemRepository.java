@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import timetakers.model.Item;
 import timetakers.model.Person;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -29,4 +30,9 @@ public interface ItemRepository extends JpaRepository<Item, UUID>, JpaSpecificat
 
     Page<Item> findByPersonAndTitleLike(Person person, String title, Pageable pageable);
 
+    List<Item> findByPerson(Person loggedInPerson);
+
+    List<Item> findByPersonAndFather(Person loggedInPerson, Item father);
+
+    Long countByPersonAndFather(Person loggedInPerson, Item father);
 }
