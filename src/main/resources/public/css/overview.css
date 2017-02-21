@@ -56,6 +56,10 @@ footer {
   text-decoration: none;
 }
 
+.overview-block{
+  margin-bottom: 25px;
+}
+
 .active{
 
 }

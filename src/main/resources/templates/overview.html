@@ -38,12 +38,14 @@
         <!-- Overview Row -->
         <div class="row">
             <th:block th:each="record : ${records}">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-                    <a class="overview-item">
-                        <span th:id="${record.oid}"
-                            th:text="'Von '+${record.start.getMinute()}+' bis '+${record.end.getMinute()}+' für Aufgabe '+${record.father.title}+', Kommentar '+${record.comment}"
-                            th:attr="data-id=${record.oid}">
-                        </span>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 overview-block">
+                    <a class="overview-item row" th:style="'background-color:' + ${record.father.color} + ';'">
+                        <span th:id="${record.oid}" class="col-xs-12"
+                              th:text="${record.startTimeString}+' bis '+${record.endTimeString}"
+                              th:attr="data-id=${record.oid}"></span>
+                        <span th:text="${record.father.title}" class="col-xs-12"
+                              th:style="'background-color:' + ${record.father.color} + ';'"></span>
+                        <span th:if="${record.comment}" class="col-xs-12" th:text="'Kommentar ' + ${record.comment}"></span>
                     </a>
                 </div>
 

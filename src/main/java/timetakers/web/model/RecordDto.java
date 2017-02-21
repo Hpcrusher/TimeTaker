@@ -23,4 +23,7 @@ public class RecordDto extends IdDto{
     public LocalDateTime start;
     public LocalDateTime end;
     public ItemDto father;
+    public String startTimeString;
+    public String endTimeString;
+
 }
