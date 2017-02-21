@@ -10,10 +10,7 @@
 
 package timetakers.model;
 
-import timetakers.repository.converter.ColorConverter;
-
 import javax.persistence.*;
-import java.awt.*;
 import java.util.UUID;
 
 /**
@@ -37,8 +34,7 @@ public class Item extends AbstractIdEntity {
     private Item father;
 
     @Column(name = "color")
-    @Convert(converter = ColorConverter.class)
-    private Color color;
+    private String color;
 
     public String getTitle() {
         return title;
@@ -64,11 +60,11 @@ public class Item extends AbstractIdEntity {
         this.father = father;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
@@ -81,7 +77,7 @@ public class Item extends AbstractIdEntity {
         private String title;
         private Person person;
         private Item father;
-        private Color color;
+        private String color;
 
         public Builder setId(UUID id) {
             this.id = id;
@@ -103,7 +99,7 @@ public class Item extends AbstractIdEntity {
             return this;
         }
 
-        public Builder withColor(Color color) {
+        public Builder withColor(String color) {
             this.color = color;
             return this;
         }

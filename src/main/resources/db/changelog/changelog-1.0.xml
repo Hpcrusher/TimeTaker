@@ -96,7 +96,7 @@
                 <constraints nullable="false" referencedTableName="person" foreignKeyName="record_has_person_fk" referencedColumnNames="id"/>
             </column>
             <column name="father_id" type="${type.id}"/>
-            <column name="color" type="${type.int}"/>
+            <column name="color" type="${type.string-10}"/>
         </createTable>
     </changeSet>
 

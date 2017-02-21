@@ -28,7 +28,6 @@ import timetakers.util.TextKey;
 import timetakers.web.assembler.ItemAssembler;
 import timetakers.web.model.ItemDto;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public class ItemController {
                 .withTitle(itemDto.title)
                 .withPerson(SecurityService.getLoggedInPerson())
                 .withFather(father)
-                .withColor(Color.decode(itemDto.color)).createItem();
+                .withColor(itemDto.color).createItem();
 
         itemRepository.save(item);
     }

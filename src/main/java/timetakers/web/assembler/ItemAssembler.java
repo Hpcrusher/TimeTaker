@@ -28,6 +28,9 @@ public class ItemAssembler extends ResourceAssemblerSupport<Item, ItemDto> {
 
     @Override
     public ItemDto toResource(Item item) {
+        if (item == null) {
+            return null;
+        }
         ItemDto dto  = new ItemDto();
         dto.oid = item.getId();
         dto.title = item.getTitle();
@@ -37,7 +40,7 @@ public class ItemAssembler extends ResourceAssemblerSupport<Item, ItemDto> {
         if (father != null) {
             dto.fatherTitle = father.getTitle();
         }
-        dto.color = item.getColor() == null ? null : Integer.toHexString(item.getColor().getRGB());
+        dto.color = item.getColor() == null ? null : item.getColor();
         return dto;
     }
 }
