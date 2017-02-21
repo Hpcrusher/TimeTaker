@@ -114,14 +114,13 @@ public class RecordController {
     }
 
     @RequestMapping(value = "/running", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public RecordDto isAnyRecordRunning(){
         Person person = SecurityService.getLoggedInPerson();
         return recordAssembler.toResource(recordService.getRunniningRecord(person));
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<RecordDto> getRecordsAsJson() {
+    public List<RecordDto> getRecordsAsJson() {
         return recordAssembler.toResources(recordRepository.findAll());
     }
 
