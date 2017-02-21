@@ -16,7 +16,7 @@
     <title th:text="#{overview.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'bootstrap'], function($) {
+        requireDomReady(['jquery', 'bootstrap'], function ($) {
         });
         /*]]>*/
     </script>
@@ -38,9 +38,19 @@
         <!-- Overview Row -->
         <div class="row">
             <th:block th:each="record : ${records}">
-                <div class="col-md-3 overview-item">
-                    <span th:id="${record.oid}" class="overviews" th:text="'Von '+${record.start}+' bis '+${record.end}+' , Kommentar '+${record.comment}" th:attr="data-id=${record.oid}"></span>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                    <a class="overview-item">
+                        <span th:id="${record.oid}"
+                            th:text="'Von '+${record.start.getMinute()}+' bis '+${record.end.getMinute()}+' für Aufgabe '+${record.father.title}+', Kommentar '+${record.comment}"
+                            th:attr="data-id=${record.oid}">
+                        </span>
+                    </a>
                 </div>
+
+
+                <!--<div class="col-md-3 overview-item">-->
+                <!--<span th:id="${record.oid}" class="overview-item" th:text="'Von '+${record.start}+' bis '+${record.end}+' , Kommentar '+${record.comment}" th:attr="data-id=${record.oid}"></span>-->
+                <!--</div>-->
             </th:block>
         </div>
         <!-- /.row -->

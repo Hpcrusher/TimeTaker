@@ -32,6 +32,30 @@ footer {
   margin: 0px 0;
 }
 
+.overview-item{
+  position:relative;
+  color:inherit;
+  display: table-cell;
+  font-family: inherit;
+  font-style: normal;
+  padding:2px;
+  margin-top:5px;
+  margin-bottom:5px;
+  text-decoration: none;
+  background-color: #59B2E0;
+  height: 150px;
+  width: 100pc;
+  text-align: center;
+  vertical-align: middle;
+  cursor:text;
+  font-size:16pt;
+  text-shadow: -2px -2px 5px lightgrey,  2px -2px 5px lightgrey,  -2px 2px 5px lightgrey,  2px 2px 5px lightgrey;
+}
+
+.overview-item:hover {
+  text-decoration: none;
+}
+
 .active{
 
 }

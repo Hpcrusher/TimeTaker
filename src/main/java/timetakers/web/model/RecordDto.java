@@ -22,4 +22,5 @@ public class RecordDto extends IdDto{
     public String comment;
     public LocalDateTime start;
     public LocalDateTime end;
+    public ItemDto father;
 }

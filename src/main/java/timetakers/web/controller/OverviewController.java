@@ -21,11 +21,11 @@ import timetakers.model.Person;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
-import timetakers.repository.specification.ItemSpecification;
 import timetakers.repository.specification.RecordSpecification;
 import timetakers.services.SecurityService;
 import timetakers.util.DateHelper;
 import timetakers.web.assembler.RecordAssembler;
+import timetakers.web.assembler.RecordOverviewAssembler;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -43,13 +43,13 @@ public class OverviewController {
 
     private RecordRepository recordRepository;
     private RecordAssembler recordAssembler;
-    private ItemRepository itemRepository;
+    private RecordOverviewAssembler recordOverviewAssembler;
 
     @Autowired
-    public OverviewController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository) {
+    public OverviewController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository, RecordOverviewAssembler recordOverviewAssembler) {
         this.recordRepository = recordRepository;
         this.recordAssembler = recordAssembler;
-        this.itemRepository = itemRepository;
+        this.recordOverviewAssembler = recordOverviewAssembler;
     }
 
     @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -64,7 +64,7 @@ public class OverviewController {
         );
 
         ModelAndView modelAndView = new ModelAndView("overview");
-        modelAndView.addObject("records", recordAssembler.toResources(something));
+        modelAndView.addObject("records", recordOverviewAssembler.toResources(something));
         return modelAndView;
     }
 }
