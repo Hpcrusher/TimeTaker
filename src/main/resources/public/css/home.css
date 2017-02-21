@@ -53,7 +53,7 @@ footer {
     text-align: center;
     vertical-align: middle;
     cursor:pointer;
-    text-shadow: -2px -2px 5px lightgrey,  2px -2px 5px lightgrey,  -2px 2px 5px lightgrey,  2px 2px 5px lightgrey;
+    text-shadow: -1px -1px 1px lightgrey,  1px -1px 1px lightgrey,  -1px 1px 1px lightgrey,  1px 1px 1px lightgrey;
 }
 
 .kachel .title{
