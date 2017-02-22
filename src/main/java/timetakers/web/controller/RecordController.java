@@ -21,6 +21,7 @@ import timetakers.model.Person;
 import timetakers.model.Record;
 import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
+import timetakers.repository.specification.RecordSpecification;
 import timetakers.services.RecordService;
 import timetakers.services.SecurityService;
 import timetakers.util.DateHelper;
@@ -121,7 +122,8 @@ public class RecordController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<RecordDto> getRecordsAsJson() {
-        return recordAssembler.toResources(recordRepository.findAll());
+        Person person = SecurityService.getLoggedInPerson();
+        return recordAssembler.toResources(recordRepository.findAll(new RecordSpecification(person)));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
