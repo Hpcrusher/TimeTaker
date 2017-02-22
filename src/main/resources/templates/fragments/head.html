@@ -28,6 +28,92 @@
                     }
                 });
             });
+
+            var stockData;
+            $('#recordEntry').click(function () {
+                CO.get({
+                    url: /*[[@{/record}]]*/'',
+                    success: function (data) {
+                        data.forEach(function(item){
+                            delete  item.links;
+                        })
+                        stockData = data;
+                        downloadCSV({ filename: "records.csv" });
+
+                    }
+                });
+            });
+
+            $('#itemEntry').click(function () {
+                CO.get({
+                    url: /*[[@{/item}]]*/'',
+                    success: function (data) {
+                        data.forEach(function(item){
+                            delete item.color;
+                            delete  item.links;
+                        })
+                        stockData = data;
+                        downloadCSV({ filename: "items.csv" });
+                    }
+                });
+            });
+
+            function convertArrayOfObjectsToCSV(args) {
+                var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+
+                data = args.data || null;
+                if (data == null || !data.length) {
+                    return null;
+                }
+
+                columnDelimiter = args.columnDelimiter || ';';
+                lineDelimiter = args.lineDelimiter || '\n';
+
+                keys = Object.keys(data[0]);
+
+                result = '';
+                result += keys.join(columnDelimiter);
+                result += lineDelimiter;
+
+                data.forEach(function(item) {
+                    ctr = 0;
+                    keys.forEach(function(key) {
+                        if (ctr > 0) result += columnDelimiter;
+
+                        result += item[key];
+                        ctr++;
+                    });
+                    result += lineDelimiter;
+                });
+
+                return result;
+            }
+
+            function downloadCSV(args) {
+                var data, filename, link;
+                var csv = convertArrayOfObjectsToCSV({
+                    data: stockData
+                });
+
+                if (csv == null) return;
+
+                filename = args.filename || 'export.csv';
+                if (!csv.match(/^data:text\/csv/i)) {
+                    csv = 'data:text/csv;charset=utf-8,' + csv;
+                }
+                data = encodeURI(csv);
+                alert(data);
+                try {
+                    link = document.createElement('a');
+                    link.setAttribute('href', data);
+                    link.setAttribute('download', filename);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }catch(Exception){
+                }
+            }
+
         });
     </script>
     <link rel="stylesheet" th:href="@{/css/head.css}"/>
@@ -50,9 +136,21 @@
                     <ul class="nav navbar-nav">
                         <li><a th:href="@{/additem}" class="navbar-right headerPointer" th:text="#{navbar.newProject}">Add Project</a></li>
                         <li><a th:href="@{/overview/today}" class="navbar-right headerPointer" th:text="#{navbar.summary}">Summary</a></li>
+                        <li>
+                            <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Export<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menuH" aria-labelledby="dropdownMenu2">
+                                <li>
+                                    <a class="headerPointer" id="recordEntry">Records</a>
+                                </li>
+                                <li>
+                                    <a class="headerPointer" id="itemEntry">Items</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><p><input class="time" type="text" id="sTime" size="7" value="0:00:00"/></p></li>
                         <li>
                             <span class="pulse" ></span>
                         </li>
@@ -66,7 +164,7 @@
                                 </th:block>
                                 <span class="caret"></span>
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <ul class="dropdown-menuH" aria-labelledby="dropdownMenu1">
                                 <li>
                                     <a th:href="@{?mylocale=en_US}"><img th:src="@{/img/gb.svg}"/></a>
                                 </li>
