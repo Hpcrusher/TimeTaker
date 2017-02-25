@@ -8,39 +8,32 @@
  *
  */
 
-package timetakers.web.controller;
+package timetakers.serializer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import timetakers.services.RegistrationService;
-import timetakers.web.model.SignupDto;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author David Liebl
  */
 
-@Controller
-@Transactional
-@RequestMapping(value = "/signup")
-public class RegistrationController {
+@Component
+public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
 
-    private RegistrationService registrationService;
-
-    @Autowired
-    public RegistrationController(RegistrationService registrationService) {
-        this.registrationService = registrationService;
+    @Override
+    public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        jsonGenerator.writeString(localDateTime.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT));
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public void createPerson(@RequestBody SignupDto signupDto) {
-        registrationService.register(signupDto);
+    @Override
+    public Class<LocalDateTime> handledType() {
+        return LocalDateTime.class;
     }
-
 }

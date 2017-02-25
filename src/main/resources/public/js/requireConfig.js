@@ -21,6 +21,7 @@ requirejs.config({
         bootstrap: '3rd/bootstrap.min',
         colorpicker: '3rd/bootstrap-colorpicker.min',
         jsRender: '3rd/jsrender.min',
+        flipclock: '3rd/flipclock.min',
 
         // internal use only
         select2: '3rd/select2.min',
@@ -29,7 +30,8 @@ requirejs.config({
         // Wrapper
         connnector: 'connector',
         ttToast: 'components/ttToast',
-        ttSelect: 'components/ttSelect'
+        ttSelect: 'components/ttSelect',
+        ttTimer: 'components/ttTimer'
     },
     shim: {
         jquery: { "exports": "$"},
@@ -39,10 +41,13 @@ requirejs.config({
 
         // internal use only
         select2: ['jquery'],
+        jquery_toast: ['jquery'],
+        flipclock: ['jquery'],
 
         // Wrapper
         connector: ['jquery'],
         ttToast: ['jquery', 'jquery_toast'],
-        ttSelect: ['jquery', 'select2']
+        ttSelect: ['jquery', 'select2'],
+        ttTimer: ['jquery', 'flipclock']
     }
 });

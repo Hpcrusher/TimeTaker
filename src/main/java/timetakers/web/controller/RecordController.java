@@ -56,31 +56,40 @@ public class RecordController {
         this.recordService = recordService;
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    @ResponseBody
-    public void createRecord( @RequestBody RecordDto recordDto ) {
+    @RequestMapping(value = "/new", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public RecordDto createRecord(@RequestBody RecordDto recordDto ) {
         Person loggedInPerson = SecurityService.getLoggedInPerson();
         Record runniningRecord = recordService.getRunniningRecord(loggedInPerson);
 
         if (runniningRecord != null) {
             runniningRecord.setEnd(DateHelper.now());
             recordRepository.save(runniningRecord);
-        }
 
-        if (runniningRecord == null || !(runniningRecord.getItem().getId().equals(recordDto.itemId))) {
-            Item item = itemRepository.getOne(recordDto.itemId);
-            if (item == null) {
-                throw new ValidationRuntimeException(new TextKey("", ""), "");
+            if (!(runniningRecord.getItem().getId().equals(recordDto.itemId))) {
+                return createNewRecord(recordDto);
+            } else {
+                return null;
             }
-            Record record = Record.builder()
-                    .withComment(recordDto.comment)
-                    .withItem(item)
-                    .withStart(recordDto.start)
-                    .withEnd(recordDto.end)
-                    .createRecord();
 
-            recordRepository.save(record);
+        } else {
+            return createNewRecord(recordDto);
         }
+
+    }
+
+    private RecordDto createNewRecord(RecordDto recordDto) {
+        Item item = itemRepository.getOne(recordDto.itemId);
+        if (item == null) {
+            throw new ValidationRuntimeException(new TextKey("", ""), "");
+        }
+        Record record = Record.builder()
+                .withComment(recordDto.comment)
+                .withItem(item)
+                .withStart(recordDto.start)
+                .withEnd(recordDto.end)
+                .createRecord();
+        record = recordRepository.save(record);
+        return recordAssembler.toResource(record);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)

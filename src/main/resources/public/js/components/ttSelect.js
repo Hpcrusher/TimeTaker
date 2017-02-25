@@ -16,6 +16,8 @@ define(['jquery', 'select2'], function ($) {
 
     function getDefaultOptions() {
         return {
+            allowClear: true,
+            placeholder: '',
             ajax: {
                 url: null,
                 dataType: 'json',
@@ -24,18 +26,22 @@ define(['jquery', 'select2'], function ($) {
                 data: function (params) {
                     // Query paramters will be ?search=[term]&page=[page]
                     return {
-                        search: params.term,
-                        page: params.page
+                        search: params.term || '',
+                        page: params.page || 0
                     };
                 },
-                processResults: function (data) {
+                processResults: function (data, params) {
                     return {
-                        results: $.map(data, function (item) {
+                        results: $.map(data.content, function (item) {
                             return {
                                 id: item.oid,
                                 text: item.title
                             };
-                        })
+                        }),
+                        pagination: {
+                            //TODO
+                            more: params.page < data.page.totalPages
+                        }
                     }
                 },
                 cache: true

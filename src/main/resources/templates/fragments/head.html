@@ -19,7 +19,7 @@
     <script th:attr="data-main=@{/js/requireConfig.js}" th:src="@{/js/3rd/require.min.js}"></script>
     <script th:src="@{/js/require.js}"></script>
     <script th:inline="javascript">
-        requireDomReady(['jquery', 'connector', 'bootstrap'], function ($, CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttTimer'], function ($, CO) {
             $('#logoutBtn').click(function () {
                 CO.post({
                     url: /*[[@{/logout}]]*/'',
@@ -29,6 +29,15 @@
                 });
             });
 
+            CO.get({
+                url: /*[[@{/record/running}]]*/'',
+                success: function (record) {
+                    if (record.start) {
+                        $('#ttTimer').ttTimer(record.start);
+                    }
+                }
+            });
+
             var stockData;
             $('#recordEntry').click(function () {
                 CO.get({
@@ -36,7 +45,7 @@
                     success: function (data) {
                         data.forEach(function(item){
                             delete  item.links;
-                        })
+                        });
                         stockData = data;
                         downloadCSV({ filename: "records.csv" });
 
@@ -51,7 +60,7 @@
                         data.forEach(function(item){
                             delete item.color;
                             delete  item.links;
-                        })
+                        });
                         stockData = data;
                         downloadCSV({ filename: "items.csv" });
                     }
@@ -102,7 +111,6 @@
                     csv = 'data:text/csv;charset=utf-8,' + csv;
                 }
                 data = encodeURI(csv);
-                alert(data);
                 try {
                     link = document.createElement('a');
                     link.setAttribute('href', data);
@@ -134,7 +142,7 @@
                 </div>
                 <div  class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav">
-                        <li><a th:href="@{/additem}" class="navbar-right headerPointer" th:text="#{navbar.newProject}">Add Project</a></li>
+                        <li><a th:href="@{/item/new}" class="navbar-right headerPointer" th:text="#{navbar.newProject}">Add Project</a></li>
                         <li><a th:href="@{/overview/today}" class="navbar-right headerPointer" th:text="#{navbar.summary}">Summary</a></li>
                         <li>
                             <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -151,8 +159,12 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <span class="pulse" ></span>
+                        <li class="container" style="width: 270px;">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div id="ttTimer"></div>
+                                </div>
+                            </div>
                         </li>
                         <li>
                             <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

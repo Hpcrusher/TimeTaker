@@ -39,14 +39,16 @@ public class RecordAssembler extends ResourceAssemblerSupport<Record, RecordDto>
         dto.itemId = record.getItem().getId();
         dto.start = record.getStart();
         dto.end = record.getEnd();
-        DateTimeFormatter formatter;
-        if (dto.start.getDayOfYear() == dto.end.getDayOfYear()){
-            formatter = DateTimeFormatter.ofPattern("HH:mm");
-        } else {
-            formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        if (dto.end != null) {
+            DateTimeFormatter formatter;
+            if (dto.start.getDayOfYear() == dto.end.getDayOfYear()){
+                formatter = DateTimeFormatter.ofPattern("HH:mm");
+            } else {
+                formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+            }
+            dto.startTimeString = dto.start.format(formatter);
+            dto.endTimeString = dto.end.format(formatter);
         }
-        dto.startTimeString = dto.start.format(formatter);
-        dto.endTimeString = dto.end.format(formatter);
         return dto;
     }
 }

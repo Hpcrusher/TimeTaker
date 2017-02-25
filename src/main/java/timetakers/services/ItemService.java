@@ -11,7 +11,6 @@
 package timetakers.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import timetakers.model.Item;
 import timetakers.model.Record;
@@ -35,10 +34,18 @@ public class ItemService {
         this.recordRepository = recordRepository;
     }
 
-    public List<Item> getLastUsedItems(Pageable pageable) {
+    public List<Item> getLastUsedItems(Integer limit) {
+        if (limit == null) {
+            limit = 8;
+        }
         RecordSpecification specification = new RecordSpecification(SecurityService.getLoggedInPerson());
-        final List<Record> records = recordRepository.findAll(specification, pageable).getContent();
-        return records.stream().map(Record::getItem).distinct().collect(Collectors.toList());
+        final List<Record> records = recordRepository.findAll(specification);
+        return records.stream()
+                .sorted((recordA, recordB) -> recordB.getStart().compareTo(recordA.getStart()))
+                .map(Record::getItem)
+                .distinct()
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
 }

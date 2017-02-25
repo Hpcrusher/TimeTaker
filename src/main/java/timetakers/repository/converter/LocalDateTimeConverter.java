@@ -12,7 +12,6 @@ package timetakers.repository.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 

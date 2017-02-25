@@ -16,86 +16,109 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttToast', 'jsRender'], function($, CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttToast', 'jsRender', 'ttTimer'], function($, CO) {
 
             var urlGetChildrenOfItem = /*[[@{/item/{id}/children}]]*/'';
             var urlItemHasChildren = /*[[@{/item/{id}/haschildren}]]*/'';
+            var urlGetLastUsedItems = /*[[@{/item/lastused}]]*/'';
+            var urlNewRecord = /*[[@{/record/new}]]*/'';
 
-            $('.kachel').click(function (event) {
-                event.preventDefault();
+            function startNewRecord($span) {
                 CO.post({
-                    url: /*[[@{/record/new}]]*/'',
+                    url: urlNewRecord,
                     data: {
-                        itemId: $(this).data('id'),
+                        itemId: $span.data('id'),
                         comment: null,
-                        start:  (new Date).toISOString(),
+                        start: (new Date).toISOString(),
                         end: null
                     },
-                    success: function () {
-                        $.ttToast({
-                            text: /*[[#{record.started}]]*/'',
-                            icon: 'success'
+                    success: function (runningRecord) {
+                        refreshLastUsedItems();
+                        $('#itemTreeModal').modal('hide');
+                        if ($.isEmptyObject(runningRecord)) {
+                            $.ttToast({
+                                text: /*[[#{record.stoped}]]*/'',
+                                icon: 'success'
+                            });
+                        } else {
+                            $.ttToast({
+                                text: /*[[#{record.started}]]*/'',
+                                icon: 'success'
+                            });
+                        }
+                        $('#ttTimer').empty();
+                        CO.get({
+                            url: /*[[@{/record/running}]]*/'',
+                            success: function (record) {
+                                if (record.start) {
+                                    $('#ttTimer').ttTimer(record.start)
+                                }
+                            }
                         });
                     }
                 });
-            });
+            }
+
+            function refreshLastUsedItems() {
+                CO.get({
+                    url: urlGetLastUsedItems,
+                    success: function (items) {
+                        var $lastUsedItemsContainer = $('#lastUsedItemsContainer');
+                        $lastUsedItemsContainer.empty();
+                        $lastUsedItemsContainer.append($('#itemTile').render(items));
+
+                        $('.kachel').click(function (event) {
+                            event.preventDefault();
+                            startNewRecord($(this));
+                        });
+                    }
+                });
+            }
 
             function toggleSwitchIcon($button) {
                 $button.toggleClass('glyphicon-plus');
                 $button.toggleClass('glyphicon-minus');
             }
 
-            function applyItemTreeButtonFunctionality(renderedData) {
-                renderedData.find('li').each(function () {
-                    var li = $(this);
-                    var button = li.find('button');
-                    CO.get({
-                        url: urlItemHasChildren.replace('{id}', button.data('id')),
-                        success: function (data) {
-                            if (data.children) {
-                                button.click(function () {
-                                    CO.get({
-                                        url: urlGetChildrenOfItem.replace('{id}', button.data('id')),
-                                        success:function (items) {
-                                            var data = $($('#treeElementTemplate').render(items));
-                                            li.append(applyItemTreeButtonFunctionality(data));
-                                            var children = li.find('ul');
-                                            toggleSwitchIcon(button);
-                                            button.unbind('click');
-                                            button.click(function () {
-                                                children.toggle();
-                                                toggleSwitchIcon(button);
-                                            });
-                                        }
-                                    });
+            function findChildrenAndApplyButtonFunctionality($button, $li) {
+                CO.get({
+                    url: urlItemHasChildren.replace('{id}', $button.data('id')),
+                    success: function (data) {
+                        if (data.children) {
+                            $button.click(function () {
+                                CO.get({
+                                    url: urlGetChildrenOfItem.replace('{id}', $button.data('id')),
+                                    success: function (items) {
+                                        var data = $($('#treeElementTemplate').render(items));
+                                        $li.append(applyItemTreeButtonFunctionality(data));
+                                        var children = $li.find('ul');
+                                        toggleSwitchIcon($button);
+                                        $button.unbind('click');
+                                        $button.click(function () {
+                                            children.toggle();
+                                            toggleSwitchIcon($button);
+                                        });
+                                    }
                                 });
-                            } else {
-                                button.remove();
-                            }
-
+                            });
+                        } else {
+                            $button.remove();
                         }
-                    });
-                    var span = li.find('span');
+
+                    }
+                });
+            }
+
+            function applyItemTreeButtonFunctionality($renderedData) {
+                $renderedData.find('li').each(function () {
+                    var $li = $(this);
+                    findChildrenAndApplyButtonFunctionality($li.find('button'), $li);
+                    var span = $li.find('span');
                     span.click(function () {
-                        CO.post({
-                            url: /*[[@{/record/new}]]*/'',
-                            data: {
-                                itemId: span.data('id'),
-                                comment: null,
-                                start: (new Date).toISOString(),
-                                end: null
-                            },
-                            success: function () {
-                                $('#itemTreeModal').modal('hide');
-                                $.ttToast({
-                                    text: /*[[#{record.started}]]*/'',
-                                    icon: 'success'
-                                });
-                            }
-                        });
+                        startNewRecord($(this));
                     });
                 });
-                return renderedData;
+                return $renderedData;
             }
 
             $('#showItemTreeBtn').click(function () {
@@ -105,11 +128,13 @@
             CO.get({
                 url: /*[[@{/item/root}]]*/'',
                 success: function (data) {
-                    var renderedData = $($('#treeElementTemplate').render(data));
-                    renderedData = applyItemTreeButtonFunctionality(renderedData);
-                    $('#itemTreeContainer').append(renderedData);
+                    var $renderedData = $($('#treeElementTemplate').render(data));
+                    $renderedData = applyItemTreeButtonFunctionality($renderedData);
+                    $('#itemTreeContainer').append($renderedData);
                 }
             });
+
+            refreshLastUsedItems();
         });
         /*]]>*/
     </script>
@@ -120,42 +145,45 @@
             {{/for}}
         </ul>
     </script>
+    <script id="itemTile" type="text/x-jsrender">
+        {{for}}
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
+                <a class="kachel" data-id="{{:oid}}" style="background-color: {{:color}};">
+                    <div class="row">
+                        {{if active}}
+                            <div class="col-xs-12">
+                                Aktiv
+                            </div>
+                        {{/if}}
+                        <div class="col-xs-12">
+                            <span class="father-title">{{:fatherTitle}}</span>
+                        </div>
+                        <div class="col-xs-12">
+                            <span class="title">{{:title}}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {{/for}}
+    </script>
     <link rel="stylesheet" th:href="@{/css/home.css}"/>
 </head>
 <body>
 <div layout:fragment="content">
-    <!-- Page Content -->
-    <div class="container">
 
-        <!-- Page Heading -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header"><span th:text="#{home.title}"></span> <button id="showItemTreeBtn" th:text="#{home.treeBtn}" type="button" class="btn btn-primary">Alle anzeigen</button></h1>
-
-            </div>
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"><span th:text="#{home.title}"></span> <button id="showItemTreeBtn" th:text="#{home.treeBtn}" type="button" class="btn btn-primary">Alle anzeigen</button></h1>
         </div>
-        <!-- /.row -->
-
-        <!-- Projects Row -->
-        <div class="row">
-            <th:block th:each="item : ${items}">
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
-                    <a class="kachel" th:attr="data-id=${item.oid}" th:style="'background-color:' + ${item.color} + ';'">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <span class="father-title" th:text="${item.fatherTitle}"></span>
-                            </div>
-                            <div class="col-sm-12">
-                                <span class="title" th:text="${item.title}"></span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </th:block>
-        </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container -->
+    <!-- /.row -->
+
+    <!-- Projects Row -->
+    <div id="lastUsedItemsContainer" class="row">
+
+    </div>
+    <!-- /.row -->
 
 
     <div id="itemTreeModal" class="modal fade item-tree" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -173,6 +201,7 @@
             </div>
         </div>
     </div>
+
 </div>
 </body>
 </html>

@@ -8,39 +8,42 @@
  *
  */
 
-package timetakers.web.controller;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import timetakers.services.RegistrationService;
-import timetakers.web.model.SignupDto;
-
 /**
  * @author David Liebl
  */
 
-@Controller
-@Transactional
-@RequestMapping(value = "/signup")
-public class RegistrationController {
+define(['jquery', 'flipclock'], function ($) {
 
-    private RegistrationService registrationService;
+    FlipClock.Lang.Custom = { days:' ', hours:' ', minutes:' ', seconds:' ' };
 
-    @Autowired
-    public RegistrationController(RegistrationService registrationService) {
-        this.registrationService = registrationService;
+    function getDefaultOptions() {
+        return {
+            clockFace: 'HourCounter',
+            language: 'Custom',
+            classes : {
+                active: 'flip-clock-active',
+                before: 'flip-clock-before',
+                divider: 'flip-clock-divider',
+                dot: 'flip-clock-dot',
+                label: 'flip-clock-label',
+                flip: 'flip',
+                play: 'play',
+                wrapper: 'flip-clock-small-wrapper'
+            }
+        }
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public void createPerson(@RequestBody SignupDto signupDto) {
-        registrationService.register(signupDto);
+    function _ttTimer(startDate, options) {
+
+        var pastDate = new Date(startDate);
+        var currentDate = new Date(new Date().toISOString());
+        // Calculate the difference in seconds between the future and current date
+        var diff = (currentDate.getTime() - pastDate.getTime()) / 1000;
+
+        var settings = $.extend(getDefaultOptions(), options);
+        $(this).FlipClock(diff, settings);
     }
 
-}
+    $.fn.ttTimer = _ttTimer;
+
+});

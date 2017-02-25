@@ -11,8 +11,6 @@
 package timetakers.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,12 +42,9 @@ public class HomeController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getHomeAsHtml(@PageableDefault(size = 8, sort = "start")Pageable pageable) {
+    public ModelAndView getHomeAsHtml() {
         ModelAndView modelAndView = new ModelAndView("home");
-        final List<ItemDto> itemDtos = itemAssembler.toResources(itemService.getLastUsedItems(pageable));
-        if (itemDtos.size() > 0) {
-            itemDtos.get(itemDtos.size() - 1).aktive = true;
-        }
+        final List<ItemDto> itemDtos = itemAssembler.toResources(itemService.getLastUsedItems(8));
         modelAndView.addObject("items", itemDtos);
         return modelAndView;
     }

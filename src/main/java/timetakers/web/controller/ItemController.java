@@ -13,11 +13,14 @@ package timetakers.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import timetakers.exception.ValidationRuntimeException;
 import timetakers.model.Item;
 import timetakers.repository.ItemRepository;
@@ -73,18 +76,21 @@ public class ItemController {
         itemRepository.save(item);
     }
 
+    @RequestMapping(value = "/new", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getAddItemAsHtml() {
+        ModelAndView modelAndView = new ModelAndView("createitem");
+        modelAndView.addObject("items", itemAssembler.toResources(itemRepository.findByPerson(SecurityService.getLoggedInPerson())));
+        return modelAndView;
+    }
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ItemDto> getItemAsJson(@RequestParam(required = false) String search, @PageableDefault(size = 20, sort = "title")Pageable pageable) {
-        return itemAssembler.toResources(itemRepository.findAll( new ItemSpecification(SecurityService.getLoggedInPerson(), search),pageable));
+    public PagedResources<ItemDto> getItemAsJson(@RequestParam(required = false) String search, @PageableDefault(size = 20, sort = "title")Pageable pageable, PagedResourcesAssembler<Item> pagedResourcesAssembler) {
+        return pagedResourcesAssembler.toResource(itemRepository.findAll( new ItemSpecification(SecurityService.getLoggedInPerson(), search),pageable), itemAssembler);
     }
 
     @RequestMapping(value = "/lastused", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ItemDto> getLastUsedItemsAsJson(@PageableDefault(size = 8, sort = "start")Pageable pageable) {
-        List<ItemDto> itemDtos = itemAssembler.toResources(itemService.getLastUsedItems(pageable));
-        if (itemDtos.size() > 0) {
-            itemDtos.get(itemDtos.size() - 1).aktive = true;
-        }
-        return itemDtos;
+    public List<ItemDto> getLastUsedItemsAsJson(@RequestParam(required = false) Integer limit) {
+        return itemAssembler.toResources(itemService.getLastUsedItems(limit));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -24,5 +24,5 @@ public class ItemDto extends IdDto{
 
     //Display only
     public String fatherTitle;
-    public Boolean aktive;
+    public Boolean active = false;
 }

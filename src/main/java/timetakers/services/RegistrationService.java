@@ -6,7 +6,6 @@ import timetakers.model.Person;
 import timetakers.model.User;
 import timetakers.repository.PersonRepository;
 import timetakers.repository.UserRepository;
-import timetakers.web.assembler.PersonAssembler;
 import timetakers.web.model.SignupDto;
 
 /**

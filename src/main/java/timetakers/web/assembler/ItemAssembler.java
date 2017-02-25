@@ -10,17 +10,24 @@
 
 package timetakers.web.assembler;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 import timetakers.model.Item;
+import timetakers.model.Record;
+import timetakers.services.RecordService;
+import timetakers.services.SecurityService;
 import timetakers.web.model.ItemDto;
 
 /**
- * Created by Martin Geßenich on 16.01.2017.
+ * @author Martin Geßenich
  */
 
 @Component
 public class ItemAssembler extends ResourceAssemblerSupport<Item, ItemDto> {
+
+    @Autowired
+    private RecordService recordService;
 
     public ItemAssembler() {
         super(ItemAssembler.class, ItemDto.class);
@@ -41,6 +48,10 @@ public class ItemAssembler extends ResourceAssemblerSupport<Item, ItemDto> {
             dto.fatherTitle = father.getTitle();
         }
         dto.color = item.getColor() == null ? null : item.getColor();
+        Record runniningRecord = recordService.getRunniningRecord(SecurityService.getLoggedInPerson());
+        if (runniningRecord != null && runniningRecord.getItem().getId().equals(item.getId())) {
+                dto.active = true;
+        }
         return dto;
     }
 }
