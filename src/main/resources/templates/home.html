@@ -141,7 +141,7 @@
     <script id="treeElementTemplate" type="text/x-jsrender">
         <ul>
             {{for}}
-                <li><span class="h3" data-id="{{:oid}}">{{:title}}</span> <button class="btn btn-xs glyphicon glyphicon-plus" data-id="{{:oid}}"></button></li>
+                <li><span class="h3 clickable" data-id="{{:oid}}">{{:title}}</span> <button class="btn btn-xs glyphicon glyphicon-plus" data-id="{{:oid}}"></button></li>
             {{/for}}
         </ul>
     </script>
@@ -191,7 +191,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalTitle">Modal title</h4>
+                    <h4 class="modal-title" th:text="#{item.all}">All items</h4>
                 </div>
                 <div class="modal-body">
                     <div id="itemTreeContainer">
