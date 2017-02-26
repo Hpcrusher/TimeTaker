@@ -16,18 +16,17 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttToast', 'jsRender', 'ttTimer'], function($, CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttToast', 'jsRender', 'ttTimer', 'ttItemTree'], function($, CO) {
 
-            var urlGetChildrenOfItem = /*[[@{/item/{id}/children}]]*/'';
-            var urlItemHasChildren = /*[[@{/item/{id}/haschildren}]]*/'';
             var urlGetLastUsedItems = /*[[@{/item/lastused}]]*/'';
             var urlNewRecord = /*[[@{/record/new}]]*/'';
+            var urlRunningRecord = /*[[@{/record/running}]]*/'';
 
-            function startNewRecord($span) {
+            function startNewRecord(itemId) {
                 CO.post({
                     url: urlNewRecord,
                     data: {
-                        itemId: $span.data('id'),
+                        itemId: itemId,
                         comment: null,
                         start: (new Date).toISOString(),
                         end: null
@@ -48,7 +47,7 @@
                         }
                         $('#ttTimer').empty();
                         CO.get({
-                            url: /*[[@{/record/running}]]*/'',
+                            url: urlRunningRecord,
                             success: function (record) {
                                 if (record.start) {
                                     $('#ttTimer').ttTimer(record.start)
@@ -75,76 +74,19 @@
                 });
             }
 
-            function toggleSwitchIcon($button) {
-                $button.toggleClass('glyphicon-plus');
-                $button.toggleClass('glyphicon-minus');
-            }
-
-            function findChildrenAndApplyButtonFunctionality($button, $li) {
-                CO.get({
-                    url: urlItemHasChildren.replace('{id}', $button.data('id')),
-                    success: function (data) {
-                        if (data.children) {
-                            $button.click(function () {
-                                CO.get({
-                                    url: urlGetChildrenOfItem.replace('{id}', $button.data('id')),
-                                    success: function (items) {
-                                        var data = $($('#treeElementTemplate').render(items));
-                                        $li.append(applyItemTreeButtonFunctionality(data));
-                                        var children = $li.find('ul');
-                                        toggleSwitchIcon($button);
-                                        $button.unbind('click');
-                                        $button.click(function () {
-                                            children.toggle();
-                                            toggleSwitchIcon($button);
-                                        });
-                                    }
-                                });
-                            });
-                        } else {
-                            $button.remove();
-                        }
-
-                    }
-                });
-            }
-
-            function applyItemTreeButtonFunctionality($renderedData) {
-                $renderedData.find('li').each(function () {
-                    var $li = $(this);
-                    findChildrenAndApplyButtonFunctionality($li.find('button'), $li);
-                    var span = $li.find('span');
-                    span.click(function () {
-                        startNewRecord($(this));
-                    });
-                });
-                return $renderedData;
-            }
-
             $('#showItemTreeBtn').click(function () {
-                $('#itemTreeModal').modal('show');
-            });
-
-            CO.get({
-                url: /*[[@{/item/root}]]*/'',
-                success: function (data) {
-                    var $renderedData = $($('#treeElementTemplate').render(data));
-                    $renderedData = applyItemTreeButtonFunctionality($renderedData);
-                    $('#itemTreeContainer').append($renderedData);
-                }
+                $.ttItemTree(
+                    function (itemId) {
+                        startNewRecord(itemId);
+                    }, {showEditButton: true}
+                )
             });
 
             refreshLastUsedItems();
         });
         /*]]>*/
     </script>
-    <script id="treeElementTemplate" type="text/x-jsrender">
-        <ul>
-            {{for}}
-                <li><span class="h3 clickable" data-id="{{:oid}}">{{:title}}</span> <button class="btn btn-xs glyphicon glyphicon-plus" data-id="{{:oid}}"></button></li>
-            {{/for}}
-        </ul>
-    </script>
+
     <script id="itemTile" type="text/x-jsrender">
         {{for}}
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
@@ -185,22 +127,7 @@
     </div>
     <!-- /.row -->
 
-
-    <div id="itemTreeModal" class="modal fade item-tree" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" th:text="#{item.all}">All items</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="itemTreeContainer">
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <th:block th:include="fragments/components/itemTree :: itemTree"/>
 
 </div>
 </body>

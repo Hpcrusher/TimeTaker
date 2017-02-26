@@ -77,10 +77,8 @@ public class ItemController {
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getAddItemAsHtml() {
-        ModelAndView modelAndView = new ModelAndView("createitem");
-        modelAndView.addObject("items", itemAssembler.toResources(itemRepository.findByPerson(SecurityService.getLoggedInPerson())));
-        return modelAndView;
+    public ModelAndView getNewItemAsHtml() {
+        return new ModelAndView("item");
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -112,6 +110,14 @@ public class ItemController {
         return Collections.singletonMap("children", itemRepository.countByPersonAndFather(SecurityService.getLoggedInPerson(), father) > 0);
     }
 
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getEditItemAsHtml(@PathVariable UUID id) {
+        ModelAndView modelAndView = new ModelAndView("item");
+        Item item = itemRepository.findOne(id);
+        ItemDto itemDto = itemAssembler.toResource(item);
+        modelAndView.addObject("item", itemDto);
+        return modelAndView;
+    }
 
     @RequestMapping(value = "/root", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ItemDto> getRootItemsAsJson() {

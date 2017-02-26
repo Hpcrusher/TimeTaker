@@ -31,7 +31,8 @@ requirejs.config({
         connnector: 'connector',
         ttToast: 'components/ttToast',
         ttSelect: 'components/ttSelect',
-        ttTimer: 'components/ttTimer'
+        ttTimer: 'components/ttTimer',
+        ttItemTree: 'components/ttItemTree'
     },
     shim: {
         jquery: { "exports": "$"},
@@ -48,6 +49,7 @@ requirejs.config({
         connector: ['jquery'],
         ttToast: ['jquery', 'jquery_toast'],
         ttSelect: ['jquery', 'select2'],
-        ttTimer: ['jquery', 'flipclock']
+        ttTimer: ['jquery', 'flipclock'],
+        ttItemTree: ['jquery', 'connector']
     }
 });
