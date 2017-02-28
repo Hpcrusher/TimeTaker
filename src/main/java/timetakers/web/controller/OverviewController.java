@@ -24,11 +24,13 @@ import timetakers.repository.RecordRepository;
 import timetakers.repository.specification.RecordSpecification;
 import timetakers.services.SecurityService;
 import timetakers.util.DateHelper;
-import timetakers.web.assembler.RecordAssembler;
 import timetakers.web.assembler.RecordOverviewAssembler;
+import timetakers.web.model.RecordDto;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 
@@ -42,29 +44,60 @@ import java.util.List;
 public class OverviewController {
 
     private RecordRepository recordRepository;
-    private RecordAssembler recordAssembler;
     private RecordOverviewAssembler recordOverviewAssembler;
 
     @Autowired
-    public OverviewController(RecordRepository recordRepository, RecordAssembler recordAssembler, ItemRepository itemRepository, RecordOverviewAssembler recordOverviewAssembler) {
+    public OverviewController(RecordRepository recordRepository, ItemRepository itemRepository, RecordOverviewAssembler recordOverviewAssembler) {
         this.recordRepository = recordRepository;
-        this.recordAssembler = recordAssembler;
         this.recordOverviewAssembler = recordOverviewAssembler;
     }
 
     @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getPersonWithIdAsJson() {
+    public ModelAndView getTodaysSummaryOfRecords() {
+        ModelAndView modelAndView = new ModelAndView("overview");
+
+        /* calculate sum of time that user has worked today */
         Person loggedInPerson = SecurityService.getLoggedInPerson();
-        List<Record> something = recordRepository.findAll(
+        List<Record> listOfTodaysRecords = recordRepository.findAll(
                 new RecordSpecification(
                         loggedInPerson,
                         DateHelper.getStartOfToday(),
                         LocalDateTime.now(Clock.systemUTC())
                 )
         );
-
-        ModelAndView modelAndView = new ModelAndView("overview");
-        modelAndView.addObject("records", recordOverviewAssembler.toResources(something));
+        long sum = 0;
+        for (Record record : listOfTodaysRecords) {
+            sum += (record.getEnd().toEpochSecond(ZoneOffset.UTC) - record.getStart().toEpochSecond(ZoneOffset.UTC));
+        }
+        Duration duration = Duration.ofSeconds(sum);
+        StringBuilder sumStringBuilder = new StringBuilder();
+        if (duration.toHours() > 0) {
+            if (duration.toHours() < 10) {
+                sumStringBuilder.append('0');
+            }
+            sumStringBuilder.append(duration.toHours()).append(":");
+        }
+        if (duration.toMinutes() % 60 < 10) {
+            sumStringBuilder.append('0');
+        }
+        sumStringBuilder.append(duration.toMinutes() % 60).append(":");
+        if (duration.getSeconds() % 60 < 10) {
+            sumStringBuilder.append('0');
+        }
+        sumStringBuilder.append(duration.getSeconds() % 60).toString();
+        modelAndView.addObject("sum", sumStringBuilder.toString());
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<RecordDto> getTodaysSummaryOfRecordsAsJSON() {
+        Person loggedInPerson = SecurityService.getLoggedInPerson();
+        return recordOverviewAssembler.toResources(recordRepository.findAll(
+                new RecordSpecification(
+                        loggedInPerson,
+                        DateHelper.getStartOfToday(),
+                        LocalDateTime.now(Clock.systemUTC())
+                ))
+        );
     }
 }
