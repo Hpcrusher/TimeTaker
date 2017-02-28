@@ -68,7 +68,7 @@
 
                         $('.kachel').click(function (event) {
                             event.preventDefault();
-                            startNewRecord($(this));
+                            startNewRecord($(this).data('id'));
                         });
                     }
                 });
