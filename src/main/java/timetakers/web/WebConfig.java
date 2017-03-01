@@ -29,7 +29,7 @@ import timetakers.web.resolver.DBLocaleResolver;
  */
 
 @Configuration
-@ImportResource("classpath:/config/json-mvc-config.xml")
+@ImportResource("classpath:/config/web-mvc-config.xml")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired

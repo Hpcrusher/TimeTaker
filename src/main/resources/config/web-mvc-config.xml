@@ -35,4 +35,43 @@
         <property name="view" ref="jsonView"/>
     </bean>
 
+
+    <bean id="webTemplateResolver"
+          class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="classpath:/templates/" />
+        <property name="suffix" value=".html" />
+        <property name="characterEncoding" value="UTF-8" />
+        <property name="templateMode" value="#{T(org.thymeleaf.templatemode.TemplateMode).HTML}"/>
+        <property name="cacheable" value="#{environment.acceptsProfiles('cache') ? 'true' : 'false'}" />
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="enableSpringELCompiler" value="true"/>
+        <property name="dialect">
+            <bean class="org.thymeleaf.spring4.dialect.SpringStandardDialect">
+                <property name="javaScriptSerializer">
+                    <bean class="timetakers.serializer.JavaScriptSerializer">
+                        <constructor-arg ref="objectMapper"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="templateResolvers">
+            <set>
+                <ref bean="webTemplateResolver" />
+            </set>
+        </property>
+        <property name="additionalDialects">
+            <set>
+                <bean class="nz.net.ultraq.thymeleaf.LayoutDialect" />
+                <bean class="org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="htmlViewResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="characterEncoding" value="UTF-8" />
+        <property name="templateEngine" ref="templateEngine" />
+    </bean>
+
 </beans>

@@ -17,6 +17,9 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker', 'ttSelect'], function($,CO) {
+
+            var item = /*[[${item}]]*/null;
+
             $('#cp2').colorpicker({
                 color: getRandomColor(),
                 format: 'hex'
