@@ -39,7 +39,7 @@ define(['jquery', 'connector'], function ($, CO) {
         $button.toggleClass('glyphicon-minus');
     }
 
-    function applyExtensionFunctionality($button, $li) {
+    function applyExtensionFunctionality($button, $li, callback) {
         CO.get({
             url: settings.baseUrl + urlItemHasChildren.replace('{id}', $button.data('id')),
             success: function (data) {
@@ -49,7 +49,7 @@ define(['jquery', 'connector'], function ($, CO) {
                             url: settings.baseUrl + urlGetChildrenOfItem.replace('{id}', $button.data('id')),
                             success: function (items) {
                                 var data = $($('#treeElementTemplate').render(items));
-                                $li.append(applyItemTreeButtonFunctionality(data));
+                                $li.append(applyItemTreeButtonFunctionality(data, callback));
                                 var children = $li.find('ul');
                                 toggleSwitchIcon($button);
                                 $button.unbind('click');
@@ -77,7 +77,7 @@ define(['jquery', 'connector'], function ($, CO) {
         $renderedData.find('li').each(function () {
             var $li = $(this);
 
-            applyExtensionFunctionality($li.find('.extend-btn'), $li);
+            applyExtensionFunctionality($li.find('.extend-btn'), $li, callback);
 
             var $editBtn = $li.find('.edit-btn');
             if (settings.showEditButton) {
