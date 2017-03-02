@@ -65,7 +65,7 @@ public class RecordController {
             runniningRecord.setEnd(DateHelper.now());
             recordRepository.save(runniningRecord);
 
-            if (!(runniningRecord.getItem().getId().equals(recordDto.itemId))) {
+            if (!(runniningRecord.getItem().getId().equals(recordDto.item.oid))) {
                 return createNewRecord(recordDto);
             } else {
                 return null;
@@ -78,7 +78,7 @@ public class RecordController {
     }
 
     private RecordDto createNewRecord(RecordDto recordDto) {
-        Item item = itemRepository.getOne(recordDto.itemId);
+        Item item = itemRepository.getOne(recordDto.item.oid);
         if (item == null) {
             throw new ValidationRuntimeException(new TextKey("", ""), "");
         }
@@ -108,7 +108,7 @@ public class RecordController {
         record.setComment(recordDto.comment);
         record.setStart(recordDto.start);
         record.setEnd(recordDto.end);
-        record.setItem(itemRepository.getOne(recordDto.itemId));
+        record.setItem(itemRepository.getOne(recordDto.item.oid));
         recordRepository.save(record);
     }
 

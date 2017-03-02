@@ -36,7 +36,6 @@ public class RecordAssembler extends ResourceAssemblerSupport<Record, RecordDto>
         RecordDto dto  = new RecordDto();
         dto.oid = record.getId();
         dto.comment = record.getComment();
-        dto.itemId = record.getItem().getId();
         dto.start = record.getStart();
         dto.end = record.getEnd();
         if (dto.end != null) {

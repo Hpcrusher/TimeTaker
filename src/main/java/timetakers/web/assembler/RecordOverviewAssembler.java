@@ -22,7 +22,7 @@ public class RecordOverviewAssembler extends RecordAssembler {
     public RecordDto toResource(Record record) {
 
         RecordDto recordDto = super.toResource(record);
-        recordDto.father = itemAssembler.toResource( record.getItem());
+        recordDto.item = itemAssembler.toResource( record.getItem());
         return recordDto;
     }
 }
