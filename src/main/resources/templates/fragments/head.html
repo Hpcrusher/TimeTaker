@@ -41,10 +41,13 @@
             var stockData;
             $('#recordEntry').click(function () {
                 CO.get({
-                    url: /*[[@{/record}]]*/'',
+                    url: /*[[@{/overview/today.json}]]*/'',
                     success: function (data) {
                         data.forEach(function(item){
                             delete  item.links;
+                            delete item.oid;
+                            delete item.itemId;
+                            item.item = item.item.title;
                         });
                         stockData = data;
                         downloadCSV({ filename: "records.csv" });
@@ -57,11 +60,14 @@
                 CO.get({
                     url: /*[[@{/item}]]*/'',
                     success: function (data) {
-                        data.forEach(function(item){
+                        data.content.forEach(function(item){
                             delete item.color;
+                            delete item.active;
+                            delete item.oid;
+                            delete item.person;
                             delete  item.links;
                         });
-                        stockData = data;
+                        stockData = data.content;
                         downloadCSV({ filename: "items.csv" });
                     }
                 });

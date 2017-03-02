@@ -1,0 +1,21 @@
+/*
+    @author Volker Mertens
+    @version 1.0
+ */
+
+.headerPointer{
+    cursor:pointer;
+    min-width:100%;
+}
+
+a{
+    text-decoration: none;
+}
+
+h2{
+    font-size: 25px;
+}
+
+.clickable {
+    cursor: pointer;
+}
