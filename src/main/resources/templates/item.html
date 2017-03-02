@@ -16,18 +16,10 @@
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker', 'ttSelect'], function($,CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker', 'ttItemTree', 'jsRender'], function($,CO) {
+            var urlItem = /*[[@{/item/{id}}]]*/'';
 
             var item = /*[[${item}]]*/null;
-
-            $('#cp2').colorpicker({
-                color: getRandomColor(),
-                format: 'hex'
-            });
-
-            $('#fatherItem').ttSelect({
-                url: /*[[@{/item}]]*/''
-            });
 
             function getRandomColor() {
                 var letters = '0123456789ABCDEF';
@@ -38,27 +30,70 @@
                 return color;
             }
 
-            $('#item-add').click(function (event) {
-                event.preventDefault();
-
-                var father_id = null;
-                var data = $('#fatherItem').ttSelect('data');
-                if (data.length > 0) {
-                    father_id = data[0].id
-                }
-
-                CO.post({
-                    url: /*[[@{/item/new}]]*/'',
-                    data: {
-                        title: $('#titleItem').val(),
-                        father: father_id,
-                        color: $('#cp2').colorpicker('getValue')
-                    },
-                    success: function () {
-                        window.location = /*[[@{/}]]*/'';
-                    }
+            if (item) {
+                $('#cp2').colorpicker({
+                    color: item.color,
+                    format: 'hex'
                 });
+
+                $('#titleItem').val(item.title);
+
+                $('#fatherItem').text(item.fatherTitle);
+
+                $('#item-add').click(function (event) {
+                    event.preventDefault();
+
+                    CO.put({
+                        url: urlItem.replace('{id}', item.oid),
+                        data: {
+                            title: $('#titleItem').val(),
+                            father:  $('#fatherItem').data('id'),
+                            color: $('#cp2').colorpicker('getValue')
+                        },
+                        success: function () {
+                            window.location = /*[[@{/}]]*/'';
+                        }
+                    });
+                });
+
+            } else {
+                $('#cp2').colorpicker({
+                    color: getRandomColor(),
+                    format: 'hex'
+                });
+
+                $('#item-add').click(function (event) {
+                    event.preventDefault();
+
+                    CO.post({
+                        url: /*[[@{/item/new}]]*/'',
+                        data: {
+                            title: $('#titleItem').val(),
+                            father: $('#fatherItem').data('id'),
+                            color: $('#cp2').colorpicker('getValue')
+                        },
+                        success: function () {
+                            window.location = /*[[@{/}]]*/'';
+                        }
+                    });
+                });
+            }
+
+            $('#selectFatherBtn').click(function (){
+                $.ttItemTree(function (itemId) {
+                        CO.get({
+                            url: urlItem.replace('{id}', itemId),
+                            success: function (itemData) {
+                                $('#fatherItem').data('id', itemData.oid);
+                                $('#fatherItem').text(itemData.title);
+                            }
+                        });
+                    },
+                    {
+                        currentItemId: item ? item.oid : undefined
+                    });
             });
+
         });
         /*]]>*/
     </script>
@@ -67,38 +102,35 @@
 <body>
 <div layout:fragment="content">
     <div class="row">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="panel panel-addItem">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <input type="text" name="title" id="titleItem" tabindex="1" class="form-control" th:placeholder="#{addItem.title}" value=""/>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-addItem">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="text" name="title" id="titleItem" tabindex="1" class="form-control" th:placeholder="#{addItem.title}" value=""/>
+                            </div>
+                            <div class="form-group">
+                                <button id="selectFatherBtn" class="btn btn-default" tabindex="2"><span th:text="#{addItem.father}"></span></button>
+                                <span id="fatherItem"></span>
+                            </div>
+                            <div class="form-group">
+                                <div id="cp2" class="input-group colorpicker-component">
+                                    <input type="text" value="#000000" class="form-control" />
+                                    <span class="input-group-addon"><i></i></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <button id="item-add" tabindex="4" class="form-control btn btn-add" >
+                                            <span th:text="#{action.save}">Save</span>
+                                        </button>
                                     </div>
-                                    <div class="form-group">
-                                        <select id="fatherItem" tabindex="2" class="form-control" th:placeholder="#{addItem.father}"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <div id="cp2" class="input-group colorpicker-component">
-                                            <input type="text" value="#000000" class="form-control" />
-                                            <span class="input-group-addon"><i></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <button id="item-add" tabindex="4" class="form-control btn btn-add" >
-                                                    <span th:text="#{addItem.add}">Add Item</span>
-                                                </button>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <a th:href="@{/}" id="item-cancel" class="form-control btn btn-cancel" tabindex="5">
-                                                    <span th:text="#{addItem.cancel}">Cancel</span>
-                                                </a>
-                                            </div>
-                                        </div>
+                                    <div class="col-sm-6">
+                                        <a th:href="@{/}" id="item-cancel" class="form-control btn btn-cancel" tabindex="5">
+                                            <span th:text="#{action.cancel}">Cancel</span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -107,6 +139,9 @@
                 </div>
             </div>
         </div>
+
+        <th:block th:include="fragments/components/itemTree :: itemTree"/>
+
     </div>
 </div>
 </body>

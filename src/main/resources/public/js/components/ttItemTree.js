@@ -90,6 +90,7 @@ define(['jquery', 'connector'], function ($, CO) {
             if (!(itemId === settings.currentItemId)) {
                 span.click(function () {
                     callback(itemId);
+                    $itemTreeModal.modal('hide');
                 });
             }
         });

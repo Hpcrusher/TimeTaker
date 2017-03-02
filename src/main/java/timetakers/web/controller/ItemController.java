@@ -11,10 +11,12 @@
 package timetakers.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,6 +96,25 @@ public class ItemController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ItemDto getItemWithIdAsJson(@PathVariable UUID id) {
         return itemAssembler.toResource(itemRepository.findOne(id));
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ResponseStatus(code = HttpStatus.OK)
+    public void updateItemWithIdAsJson(@PathVariable UUID id, @RequestBody ItemDto itemDto) {
+        if (!id.equals(itemDto.oid)) {
+            throw new IllegalArgumentException();
+        }
+        Item item = itemRepository.findOne(id);
+        if (item == null) {
+            throw new ResourceNotFoundException("", null);
+        }
+        item.setTitle(itemDto.title);
+        item.setColor(itemDto.color);
+        if (itemDto.father != null) {
+            Item father = itemRepository.findOne(itemDto.father);
+            item.setFather(father);
+        }
+        itemRepository.save(item);
     }
 
     @RequestMapping(value = "/{id}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

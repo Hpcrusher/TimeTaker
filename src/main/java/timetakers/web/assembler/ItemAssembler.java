@@ -42,9 +42,9 @@ public class ItemAssembler extends ResourceAssemblerSupport<Item, ItemDto> {
         dto.oid = item.getId();
         dto.title = item.getTitle();
         dto.person = item.getPerson().getId();
-        dto.father = item.getFather() == null ? null : item.getFather().getId();
         final Item father = item.getFather();
         if (father != null) {
+            dto.father = father.getId();
             dto.fatherTitle = father.getTitle();
         }
         dto.color = item.getColor() == null ? null : item.getColor();
