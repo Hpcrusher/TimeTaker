@@ -29,6 +29,10 @@
                 });
             });
 
+            setTimeout(function () {
+                location.reload(true);
+            }, 630000);
+
             CO.get({
                 url: /*[[@{/record/running}]]*/'',
                 success: function (record) {
