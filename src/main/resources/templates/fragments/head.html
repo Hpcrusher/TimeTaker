@@ -45,10 +45,14 @@
             var stockData;
             $('#recordEntry').click(function () {
                 CO.get({
-                    url: /*[[@{/overview/today.json}]]*/'',
+                    url: /*[[@{/overview/dateRange}]]*/'',
+                    data: {
+                        startTime: new Date().toISOString(),
+                        endTime: new Date().toISOString()
+                    },
                     success: function (data) {
                         data.forEach(function(item){
-                            delete  item.links;
+                            delete item.links;
                             delete item.oid;
                             delete item.itemId;
                             item.item = item.item.title;
@@ -153,7 +157,34 @@
                 <div  class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav">
                         <li><a th:href="@{/item/new}" class="navbar-right headerPointer" th:text="#{navbar.newProject}">Add Project</a></li>
-                        <li><a th:href="@{/overview/today}" class="navbar-right headerPointer" th:text="#{navbar.summary}">Summary</a></li>
+                        <li>
+                            <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenuOverview" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span th:text="#{navbar.summary}">
+                                Summary
+                                </span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menuH" aria-labelledby="dropdownMenuOverview">
+                                <li>
+                                    <a class="headerPointer" th:text="#{navbar.summary.today}" th:href="@{/overview?dateRange=TODAY}">Today</a>
+                                </li>
+                                <li>
+                                    <a class="headerPointer" th:text="#{navbar.summary.currentWeek}" th:href="@{/overview?dateRange=CURRENT_WEEK}">Current week</a>
+                                </li>
+                                <li>
+                                    <a class="headerPointer" th:text="#{navbar.summary.currentMonth}" th:href="@{/overview?dateRange=CURRENT_MONTH}">Current month</a>
+                                </li>
+                                <li>
+                                    <a class="headerPointer" th:text="#{navbar.summary.currentYear}" th:href="@{/overview?dateRange=CURRENT_YEAR}">Current year</a>
+                                </li>
+                                <li>
+                                    <a class="headerPointer" th:text="#{navbar.summary.last7days}" th:href="@{/overview?dateRange=LAST_7_DAYS}">Last 7 days</a>
+                                </li>
+                                <li>
+                                    <a class="headerPointer" th:text="#{navbar.summary.last30days}" th:href="@{/overview?dateRange=LAST_30_DAYS}">Last 30 days</a>
+                                </li>
+                            </ul>
+                        </li>
                         <li>
                             <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 Export<span class="caret"></span>

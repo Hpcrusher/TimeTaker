@@ -57,7 +57,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addFormatters(FormatterRegistry registry){
-        registry.addConverter(new LocalDateTimeConverter("yyyy-MM-dd'T'HH:mm:ssXXX"));
+        registry.addConverter(new LocalDateTimeConverter());
     }
 
 }

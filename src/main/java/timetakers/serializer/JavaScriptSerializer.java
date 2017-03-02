@@ -37,7 +37,7 @@ public class JavaScriptSerializer implements IStandardJavaScriptSerializer {
             this.mapper = new Jackson2ObjectMapperBuilder()
                     .indentOutput(true)
                     .failOnEmptyBeans(false)
-                    .simpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+                    .simpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                     .build();
         } else {
             this.mapper = mapper.copy();

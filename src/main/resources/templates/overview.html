@@ -18,16 +18,20 @@
         /*<![CDATA[*/
         requireDomReady(['jquery', 'connector', 'datetime', 'bootstrap', 'jsRender'], function ($,CO,moment) {
 
-            var urlRecordRunning = /*[[@{/overview/today.json}]]*/'';
+            var urlOverviewToday = /*[[@{/overview/dateRange}]]*/'';
             moment.locale(/*[[${#locale.getLanguage()}]]*/'en');
 
             CO.get({
-                url: urlRecordRunning,
+                url: urlOverviewToday,
+                data: {
+                    startTime: /*[[${startTime}]]*/ null,
+                    endTime: /*[[${endTime}]]*/ null
+                },
                 success: function (records) {
-                    $.each(records, function (index) {
-                        records[index].start = moment(records[index].start).format('LT');
-                        records[index].end = moment(records[index].end).format('LT');
-                    });
+                    for(var i = 0;i<records.length;i++) {
+                        records[i].start = moment(records[i].start).format('lll');
+                        records[i].end = moment(records[i].end).format('lll');
+                    }
                     $('#overviewRow').append($('#overviewElementTemplate').render(records));
                 }
             });

@@ -19,4 +19,8 @@ public class DateHelper {
     public static LocalDateTime getStartOfToday() {
         return startOfDayFrom(now());
     }
+
+    public static LocalDateTime endOfDayFrom(LocalDateTime someday) {
+        return startOfDayFrom(someday.plusDays(1));
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import timetakers.model.Person;
 import timetakers.model.Record;
@@ -25,12 +26,14 @@ import timetakers.repository.specification.RecordSpecification;
 import timetakers.services.SecurityService;
 import timetakers.util.DateHelper;
 import timetakers.web.assembler.RecordOverviewAssembler;
+import timetakers.web.model.DateRange;
 import timetakers.web.model.RecordDto;
 
 import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,21 +55,78 @@ public class OverviewController {
         this.recordOverviewAssembler = recordOverviewAssembler;
     }
 
-    @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getTodaysSummaryOfRecords() {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getTodaysSummaryOfRecords(@RequestParam DateRange dateRange) {
         ModelAndView modelAndView = new ModelAndView("overview");
 
         /* calculate sum of time that user has worked today */
         Person loggedInPerson = SecurityService.getLoggedInPerson();
+        LocalDateTime today = LocalDateTime.now(Clock.systemUTC());
         List<Record> listOfTodaysRecords = recordRepository.findAll(
                 new RecordSpecification(
                         loggedInPerson,
                         DateHelper.getStartOfToday(),
-                        LocalDateTime.now(Clock.systemUTC())
+                        today
                 )
         );
+
+        String sumString = getSumStringFrom(listOfTodaysRecords);
+        modelAndView.addObject("sum", sumString);
+        List<LocalDateTime> dates = getDatesForDateRange(dateRange);
+        modelAndView.addObject("startTime", dates.get(0));
+        modelAndView.addObject("endTime", dates.get(1));
+        return modelAndView;
+    }
+
+    private static List<LocalDateTime> getDatesForDateRange(DateRange dateRange) {
+        List<LocalDateTime> result = new ArrayList<>(2);
+        LocalDateTime today = LocalDateTime.now(Clock.systemUTC());
+        switch (dateRange) {
+            case TODAY:
+                result.add(today);
+                result.add(today);
+                break;
+            case CURRENT_WEEK:
+                result.add(today.minusDays(today.getDayOfWeek().getValue() - 1));
+                result.add(today);
+                break;
+            case CURRENT_MONTH:
+                result.add(today.minusDays(today.getDayOfMonth()-1));
+                result.add(today);
+                break;
+            case CURRENT_YEAR:
+                result.add(today.minusDays(today.getDayOfYear()-1));
+                result.add(today);
+                break;
+            case LAST_7_DAYS:
+                result.add(today.minusDays(7));
+                result.add(today);
+                break;
+            case LAST_30_DAYS:
+                result.add(today.minusDays(30));
+                result.add(today);
+                break;
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/dateRange", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<RecordDto> getSummaryOfRecordsinDateRange(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
+        Person loggedInPerson = SecurityService.getLoggedInPerson();
+        List<Record> listOfTodaysRecords = recordRepository.findAll(
+                new RecordSpecification(
+                        loggedInPerson,
+                        DateHelper.startOfDayFrom(startTime),
+                        DateHelper.endOfDayFrom(endTime)
+                )
+        );
+
+        return recordOverviewAssembler.toResources(listOfTodaysRecords);
+    }
+
+    private static String getSumStringFrom(List<Record> listOfRecords) {
         long sum = 0;
-        for (Record record : listOfTodaysRecords) {
+        for (Record record : listOfRecords) {
             sum += (record.getEnd().toEpochSecond(ZoneOffset.UTC) - record.getStart().toEpochSecond(ZoneOffset.UTC));
         }
         Duration duration = Duration.ofSeconds(sum);
@@ -84,20 +144,8 @@ public class OverviewController {
         if (duration.getSeconds() % 60 < 10) {
             sumStringBuilder.append('0');
         }
-        sumStringBuilder.append(duration.getSeconds() % 60).toString();
-        modelAndView.addObject("sum", sumStringBuilder.toString());
-        return modelAndView;
-    }
+        sumStringBuilder.append(duration.getSeconds() % 60);
 
-    @RequestMapping(value = "/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<RecordDto> getTodaysSummaryOfRecordsAsJSON() {
-        Person loggedInPerson = SecurityService.getLoggedInPerson();
-        return recordOverviewAssembler.toResources(recordRepository.findAll(
-                new RecordSpecification(
-                        loggedInPerson,
-                        DateHelper.getStartOfToday(),
-                        LocalDateTime.now(Clock.systemUTC())
-                ))
-        );
+        return sumStringBuilder.toString();
     }
 }

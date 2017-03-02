@@ -23,6 +23,7 @@ requirejs.config({
         jsRender: '3rd/jsrender.min',
         flipclock: '3rd/flipclock.min',
         datetime: '3rd/moment',
+        datepicker: '3rd/bootstrap-datepicker.min',
 
         // internal use only
         select2: '3rd/select2.min',
@@ -41,6 +42,7 @@ requirejs.config({
         colorpicker: ['jquery', 'bootstrap'],
         jsRender: ['jquery'],
         datetime: { "exports": "moment"},
+        datepicker: ['jquery', 'bootstrap'],
 
         // internal use only
         select2: ['jquery'],
