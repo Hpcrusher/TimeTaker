@@ -98,7 +98,7 @@ public class RecordController {
         recordRepository.delete(id);
     }
 
-    @RequestMapping(value = "/udpate", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/update", method = RequestMethod.PATCH)
     @ResponseBody
     public void updateRecord( @RequestBody RecordDto recordDto ) {
         Record record = recordRepository.getOne(recordDto.oid);
@@ -133,6 +133,12 @@ public class RecordController {
     public List<RecordDto> getRecordsAsJson() {
         Person person = SecurityService.getLoggedInPerson();
         return recordAssembler.toResources(recordRepository.findAll(new RecordSpecification(person)));
+    }
+
+    @RequestMapping(value = "/dateRange", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<RecordDto> getRecordsInDateRangeAsJson(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
+        Person person = SecurityService.getLoggedInPerson();
+        return recordAssembler.toResources(recordRepository.findAll(new RecordSpecification(person, startTime, endTime)));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
