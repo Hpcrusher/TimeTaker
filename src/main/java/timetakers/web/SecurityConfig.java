@@ -21,6 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import timetakers.security.CustomUserDetailsService;
 
+import static timetakers.TimeTakerApplication.DISABLE_FRAME_OPTIONS;
+
 /**
  * @author David Liebl
  */
@@ -40,6 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        if (DISABLE_FRAME_OPTIONS) {
+            http.headers()
+                    .frameOptions()
+                    .disable();
+        }
+
         http.authorizeRequests()
             .antMatchers("/css/**", "/js/**", "/img/**", "/signup*", "/logout*", "/login*", "/error").permitAll()
             .anyRequest().authenticated()

@@ -12,6 +12,8 @@ package timetakers;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,11 +24,24 @@ import java.util.Collections;
  */
 
 @SpringBootApplication
+@EnableWebSecurity
+@Configuration
 public class TimeTakerApplication {
+
+    public static Boolean DISABLE_FRAME_OPTIONS;
 
     public static void main(String[] args) {
         ArrayList<String> arguments = new ArrayList<>(args.length + 1);
         Collections.addAll(arguments, args);
+
+        for (int i = 0; i < arguments.size(); i++) {
+            String option = arguments.get(i);
+            if (option.contains("DISABLE-X-FRAME-OPTIONS=")) {
+                DISABLE_FRAME_OPTIONS = Boolean.parseBoolean(option.substring(option.indexOf("=") + 1));
+                arguments.remove(i);
+            }
+        }
+
         arguments.add("--spring.config.location=file:" + System.getProperty("user.home") + File.separator);
         SpringApplication.run(TimeTakerApplication.class, arguments.toArray(new String[arguments.size()]));
     }
