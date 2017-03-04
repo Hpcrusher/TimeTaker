@@ -11,6 +11,7 @@
 package timetakers.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +56,7 @@ public class OverviewController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getTodaysSummaryOfRecords(@RequestParam DateRange dateRange) {
+    public ModelAndView getSummaryOfRecords(@RequestParam DateRange dateRange) {
         ModelAndView modelAndView = new ModelAndView("overview");
 
         List<LocalDateTime> dates = getDatesForDateRange(dateRange);
@@ -109,14 +110,15 @@ public class OverviewController {
     }
 
     @RequestMapping(value = "/dateRange", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<RecordDto> getSummaryOfRecordsinDateRange(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
+    public List<RecordDto> getSummaryOfRecordsInDateRange(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
         Person loggedInPerson = SecurityService.getLoggedInPerson();
         List<Record> listOfTodaysRecords = recordRepository.findAll(
                 new RecordSpecification(
                         loggedInPerson,
                         DateHelper.startOfDayFrom(startTime),
                         DateHelper.endOfDayFrom(endTime)
-                )
+                ),
+                new Sort("start")
         );
 
         return recordOverviewAssembler.toResources(listOfTodaysRecords);
