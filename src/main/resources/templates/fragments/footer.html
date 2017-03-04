@@ -3,9 +3,13 @@
 <head>
 </head>
 <body>
-    <div th:fragment="footer">
-        &copy; 2016 - 2017
-        <a th:href="@{/impressum}">Impressum</a>
-    </div>
+    <th:block th:fragment="footer">
+        <div class="row pagefooter">
+            <div class="col-xs-12">
+                <span>&copy; 2016 - 2017</span>
+                <a th:href="@{/impressum}">Impressum</a>
+            </div>
+        </div>
+    </th:block>
 </body>
 </html>

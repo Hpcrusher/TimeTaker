@@ -11,7 +11,7 @@
 
 <html xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorator="layouts/single">
+      layout:decorate="~{layouts/single}">
 <head>
     <title th:text="#{overview.title}"></title>
     <script th:inline="javascript">
@@ -33,6 +33,7 @@
                         records[i].end = moment(records[i].end).format('lll');
                     }
                     $('#overviewRow').append($('#overviewElementTemplate').render(records));
+                    $('.pageside').fadeIn();
                 }
             });
         });
@@ -60,30 +61,25 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <!-- Page Content -->
-    <div class="container">
-
-        <!-- Page Heading -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header" th:text="#{overview.title}">Page Heading</h1>
-            </div>
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" th:text="#{overview.title}">Page Heading</h1>
         </div>
-        <!-- /.row -->
-
-        <!-- Overview Row -->
-        <div class="row" id="overviewRow"></div>
-        <!-- /.row -->
-
-        <!-- Summary bottom -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="summary" th:text="'&#931; ' + ${sum}">Page Heading</h1>
-            </div>
-        </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container -->
+    <!-- /.row -->
+
+    <!-- Overview Row -->
+    <div class="row" id="overviewRow"></div>
+    <!-- /.row -->
+
+    <!-- Summary bottom -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="summary" th:text="'&#931; ' + ${sum}">Page Heading</h1>
+        </div>
+    </div>
+    <!-- /.row -->
 </div>
 </body>
 </html>

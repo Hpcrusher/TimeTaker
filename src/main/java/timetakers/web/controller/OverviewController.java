@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import timetakers.model.Person;
 import timetakers.model.Record;
-import timetakers.repository.ItemRepository;
 import timetakers.repository.RecordRepository;
 import timetakers.repository.specification.RecordSpecification;
 import timetakers.services.SecurityService;
@@ -50,7 +49,7 @@ public class OverviewController {
     private RecordOverviewAssembler recordOverviewAssembler;
 
     @Autowired
-    public OverviewController(RecordRepository recordRepository, ItemRepository itemRepository, RecordOverviewAssembler recordOverviewAssembler) {
+    public OverviewController(RecordRepository recordRepository, RecordOverviewAssembler recordOverviewAssembler) {
         this.recordRepository = recordRepository;
         this.recordOverviewAssembler = recordOverviewAssembler;
     }
@@ -59,20 +58,19 @@ public class OverviewController {
     public ModelAndView getTodaysSummaryOfRecords(@RequestParam DateRange dateRange) {
         ModelAndView modelAndView = new ModelAndView("overview");
 
-        /* calculate sum of time that user has worked today */
+        List<LocalDateTime> dates = getDatesForDateRange(dateRange);
+        /* calculate sum of time that user has worked in DateRange */
         Person loggedInPerson = SecurityService.getLoggedInPerson();
-        LocalDateTime today = LocalDateTime.now(Clock.systemUTC());
         List<Record> listOfTodaysRecords = recordRepository.findAll(
                 new RecordSpecification(
                         loggedInPerson,
-                        DateHelper.getStartOfToday(),
-                        today
+                        dates.get(0),
+                        dates.get(1)
                 )
         );
 
         String sumString = getSumStringFrom(listOfTodaysRecords);
         modelAndView.addObject("sum", sumString);
-        List<LocalDateTime> dates = getDatesForDateRange(dateRange);
         modelAndView.addObject("startTime", dates.get(0));
         modelAndView.addObject("endTime", dates.get(1));
         return modelAndView;

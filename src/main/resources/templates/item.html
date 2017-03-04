@@ -11,7 +11,7 @@
 
 <html xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorator="layouts/single">
+      layout:decorate="~{layouts/single}">
 <head>
     <title th:text="#{login.title}"></title>
     <script th:inline="javascript">
@@ -46,6 +46,7 @@
                     CO.put({
                         url: urlItem.replace('{id}', item.oid),
                         data: {
+                            oid: item.oid,
                             title: $('#titleItem').val(),
                             father:  $('#fatherItem').data('id'),
                             color: $('#cp2').colorpicker('getValue')
@@ -112,7 +113,7 @@
                             </div>
                             <div class="form-group">
                                 <button id="selectFatherBtn" class="btn btn-default" tabindex="2"><span th:text="#{addItem.father}"></span></button>
-                                <span id="fatherItem"></span>
+                                <span id="fatherItem" th:text="#{addItem.noFatherSelected}"></span>
                             </div>
                             <div class="form-group">
                                 <div id="cp2" class="input-group colorpicker-component">

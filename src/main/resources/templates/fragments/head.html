@@ -142,8 +142,8 @@
     <link rel="stylesheet" th:href="@{/css/components.css}"/>
 </head>
 <body>
-    <div th:fragment="header">
-        <nav class="navbar navbar-default">
+    <th:block th:fragment="header">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarCollapse" aria-expanded="false">
@@ -200,7 +200,7 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="container" style="width: 270px;">
+                        <li class="container-fluid">
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div id="ttTimer"></div>
@@ -233,6 +233,6 @@
                 </div>
             </div>
         </nav>
-    </div>
+    </th:block>
 </body>
 </html>

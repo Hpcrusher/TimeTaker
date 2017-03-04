@@ -3,7 +3,6 @@ package timetakers.converter;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -16,7 +15,7 @@ public class LocalDateTimeConverter implements Converter<String, LocalDateTime> 
         if (s.isEmpty()) {
             return null;
         }
-        return LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+        return LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
 
     }
 

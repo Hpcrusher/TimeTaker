@@ -78,3 +78,15 @@ span.pulse {
 .clickable {
     cursor: pointer;
 }
+
+.pagehead {
+    z-index: 2000;
+}
+
+.pageside{
+    padding-top: 50px;
+}
+
+.pagefooter {
+    padding-bottom: 8px;
+}
