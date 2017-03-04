@@ -22,6 +22,11 @@ define('connector',['jquery'], function($){
         if (method === 'GET') {
             data = options.data;
         }
+
+        $('.validation').each(function () {
+            $(this).fadeOut();
+        });
+
         $.ajax({
             url: options.url,
             method: method,
@@ -31,6 +36,14 @@ define('connector',['jquery'], function($){
             contentType: 'application/json; charset=utf-8',
             statusCode:{
                 500: function (data) {
+                    var error = data.responseJSON;
+                    $('.validation').each(function () {
+                        var $this = $(this);
+                        if ($this.data('validation') === error.elementId) {
+                            $this.text(error.message);
+                            $this.fadeIn();
+                        }
+                    });
                 }
             }
         });

@@ -90,3 +90,11 @@ span.pulse {
 .pagefooter {
     padding-bottom: 8px;
 }
+
+.validation {
+    color: #b80000;
+}
+
+.form-group span.validation {
+    margin-left: 5px;
+}

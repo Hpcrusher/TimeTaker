@@ -22,6 +22,10 @@ public class TextKey implements MessageSourceResolvable {
     private final Object[] arguments;
     private final String defaultMessage;
 
+    public TextKey(String key) {
+        this(key, "");
+    }
+
     public TextKey(String key, Object... arguments) {
         this(key, "", arguments);
     }

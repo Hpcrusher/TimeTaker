@@ -67,7 +67,7 @@ public class ItemController {
             father = itemRepository.getOne(itemDto.father);
         }
         if (StringUtils.isEmpty(itemDto.title)) {
-            throw new ValidationRuntimeException(new TextKey("item.validation.emptyTitle"), "title");
+            throw new ValidationRuntimeException(new TextKey("item.validation.emptyTitle"), "itemName");
         }
         Item item = Item.builder()
                 .withTitle(itemDto.title)
@@ -107,6 +107,9 @@ public class ItemController {
         Item item = itemRepository.findOne(id);
         if (item == null) {
             throw new ResourceNotFoundException("", null);
+        }
+        if (StringUtils.isEmpty(itemDto.title)) {
+            throw new ValidationRuntimeException(new TextKey("item.validation.emptyTitle"), "itemName");
         }
         item.setTitle(itemDto.title);
         item.setColor(itemDto.color);

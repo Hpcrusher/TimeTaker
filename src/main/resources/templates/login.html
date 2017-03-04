@@ -118,15 +118,19 @@
                                         <form id="register-form" method="post" role="form" style="display: none;">
                                             <div class="form-group">
                                                 <input type="text" name="username" id="usernameRegister" tabindex="1" class="form-control" placeholder="Username" value=""/>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text" name="name" id="name" tabindex="2" class="form-control" placeholder="Name" value=""/>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text" name="firstname" id="firstname" tabindex="3" class="form-control" placeholder="Firstname" value=""/>
+                                                <span class="validation" data-validation="username"></span>
                                             </div>
                                             <div class="form-group">
                                                 <input type="password" name="password" id="passwordRegister" tabindex="4" class="form-control" placeholder="Password"/>
+                                                <span class="validation" data-validation="password"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="firstname" id="firstname" tabindex="3" class="form-control" placeholder="Firstname" value=""/>
+                                                <span class="validation" data-validation="firstname"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="name" id="name" tabindex="2" class="form-control" placeholder="Name" value=""/>
+                                                <span class="validation" data-validation="name"></span>
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
