@@ -13,7 +13,7 @@
       xmlns:layout="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layouts/single}">
 <head>
-    <title th:text="#{login.title}"></title>
+    <title th:text="#{navbar.newItem}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
         requireDomReady(['jquery', 'connector', 'bootstrap', 'colorpicker', 'ttItemTree', 'jsRender'], function($,CO) {
@@ -30,7 +30,11 @@
                 return color;
             }
 
+            var title;
+
             if (item) {
+                title = /*[[#{item.edit}]]*/'';
+
                 $('#cp2').colorpicker({
                     color: item.color,
                     format: 'hex'
@@ -58,6 +62,9 @@
                 });
 
             } else {
+
+                title = /*[[#{navbar.newProject}]]*/'';
+
                 $('#cp2').colorpicker({
                     color: getRandomColor(),
                     format: 'hex'
@@ -95,6 +102,8 @@
                     });
             });
 
+            $('.page-title').text(title);
+
         });
         /*]]>*/
     </script>
@@ -103,7 +112,10 @@
 <body>
 <div layout:fragment="content">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
+        <h1 class="page-header">
+            <span class="page-title">Page Title</span>
+        </h1>
+        <div class="col-md-12">
             <div class="panel panel-addItem">
                 <div class="panel-body">
                     <div class="row">
