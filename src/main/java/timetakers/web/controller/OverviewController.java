@@ -60,20 +60,24 @@ public class OverviewController {
         ModelAndView modelAndView = new ModelAndView("overview");
 
         List<LocalDateTime> dates = getDatesForDateRange(dateRange);
+        LocalDateTime start = DateHelper.startOfDayFrom(dates.get(0));
+        LocalDateTime end = DateHelper.endOfDayFrom(dates.get(1));
+
         /* calculate sum of time that user has worked in DateRange */
         Person loggedInPerson = SecurityService.getLoggedInPerson();
+
         List<Record> listOfTodaysRecords = recordRepository.findAll(
                 new RecordSpecification(
                         loggedInPerson,
-                        dates.get(0),
-                        dates.get(1)
+                        start,
+                        end
                 )
         );
 
         String sumString = getSumStringFrom(listOfTodaysRecords);
         modelAndView.addObject("sum", sumString);
-        modelAndView.addObject("startTime", dates.get(0));
-        modelAndView.addObject("endTime", dates.get(1));
+        modelAndView.addObject("startTime", start);
+        modelAndView.addObject("endTime", end);
         return modelAndView;
     }
 

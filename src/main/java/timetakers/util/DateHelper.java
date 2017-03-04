@@ -13,7 +13,7 @@ public class DateHelper {
     }
 
     public static LocalDateTime startOfDayFrom(LocalDateTime someday) {
-        return LocalDateTime.of(someday.getYear(), someday.getMonth(), someday.getDayOfMonth(), 0, 0, 0);
+        return someday.withHour(0).withMinute(0).withSecond(1);
     }
 
     public static LocalDateTime getStartOfToday() {
@@ -21,6 +21,6 @@ public class DateHelper {
     }
 
     public static LocalDateTime endOfDayFrom(LocalDateTime someday) {
-        return startOfDayFrom(someday.plusDays(1));
+        return startOfDayFrom(someday.withHour(23).withMinute(59).withSecond(59));
     }
 }

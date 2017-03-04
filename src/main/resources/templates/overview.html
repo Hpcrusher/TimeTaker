@@ -16,26 +16,59 @@
     <title th:text="#{overview.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'datetime', 'bootstrap', 'jsRender'], function ($,CO,moment) {
+        requireDomReady(['jquery', 'connector', 'datetime', 'bootstrap', 'jsRender', 'datepicker' , 'dp_language'], function ($, CO, moment) {
 
             var urlOverviewToday = /*[[@{/overview/dateRange}]]*/'';
-            moment.locale(/*[[${#locale.getLanguage()}]]*/'en');
+            var language = /*[[${#locale.getLanguage()}]]*/'en';
+            moment.locale(language);
 
-            CO.get({
-                url: urlOverviewToday,
-                data: {
-                    startTime: /*[[${startTime}]]*/ null,
-                    endTime: /*[[${endTime}]]*/ null
-                },
-                success: function (records) {
-                    for(var i = 0;i<records.length;i++) {
-                        records[i].start = moment(records[i].start).format('lll');
-                        records[i].end = moment(records[i].end).format('lll');
+            var startTime = /*[[${startTime}]]*/null;
+            var endTime = /*[[${endTime}]]*/ null;
+
+            var $fromDate = $('#fromDate');
+            var $toDate = $('#toDate');
+
+            function updateOverview() {
+                $('#overviewRow').empty();
+                CO.get({
+                    url: urlOverviewToday,
+                    data: {
+                        startTime: new Date($fromDate.datepicker('getUTCDate')).toISOString(),
+                        endTime: new Date($toDate.datepicker('getUTCDate')).toISOString()
+                    },
+                    success: function (records) {
+                        for (var i = 0; i < records.length; i++) {
+                            records[i].start = moment(records[i].start).format('lll');
+                            records[i].end = moment(records[i].end).format('lll');
+                        }
+                        $('#overviewRow').append($('#overviewElementTemplate').render(records));
+                        $('.pageside').fadeIn();
                     }
-                    $('#overviewRow').append($('#overviewElementTemplate').render(records));
-                    $('.pageside').fadeIn();
-                }
+                });
+            }
+
+            $('.input-daterange input').each(function () {
+                $(this).datepicker({
+                    autoclose: true,
+                    todayBtn: true,
+                    todayHighlight: true,
+                    language: language
+                });
+
+                $(this).on('changeDate', updateOverview);
             });
+
+//            var today = new Date();
+//            $toDate.datepicker('setStartDate', today.toISOString());
+//            today.setDate(today.getDate() + 1);
+//            $fromDate.datepicker('setEndDate', today.toISOString());
+
+
+            $fromDate.datepicker('update', new Date(startTime));
+            $toDate.datepicker('update', new Date(endTime));
+
+            updateOverview();
+
         });
         /*]]>*/
     </script>
@@ -56,6 +89,7 @@
                     </a>
                 </div>
             {{/for}}
+
     </script>
     <link rel="stylesheet" th:href="@{/css/overview.css}"/>
 </head>
@@ -68,6 +102,16 @@
         </div>
     </div>
     <!-- /.row -->
+
+    <div class="row datepicker-daterange">
+        <div class="col-xs-12">
+            <div class="input-group input-daterange">
+                <input id="fromDate" type="text" class="form-control">
+                <div class="input-group-addon" th:text="#{overview.until}">to</div>
+                <input id="toDate" type="text" class="form-control">
+            </div>
+        </div>
+    </div>
 
     <!-- Overview Row -->
     <div class="row" id="overviewRow"></div>
