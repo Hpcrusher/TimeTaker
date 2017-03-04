@@ -28,7 +28,7 @@ import java.util.Collections;
 @Configuration
 public class TimeTakerApplication {
 
-    public static Boolean DISABLE_FRAME_OPTIONS;
+    public static Boolean DISABLE_FRAME_OPTIONS = false;
 
     public static void main(String[] args) {
         ArrayList<String> arguments = new ArrayList<>(args.length + 1);
