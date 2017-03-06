@@ -76,8 +76,8 @@ public class OverviewController {
 
         String sumString = getSumStringFrom(listOfTodaysRecords);
         modelAndView.addObject("sum", sumString);
-        modelAndView.addObject("startTime", start);
-        modelAndView.addObject("endTime", end);
+        modelAndView.addObject("startTime", start.toLocalDate());
+        modelAndView.addObject("endTime", end.toLocalDate());
         return modelAndView;
     }
 

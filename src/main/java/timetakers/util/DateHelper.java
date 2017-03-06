@@ -21,6 +21,6 @@ public class DateHelper {
     }
 
     public static LocalDateTime endOfDayFrom(LocalDateTime someday) {
-        return startOfDayFrom(someday.withHour(23).withMinute(59).withSecond(59));
+        return someday.withHour(23).withMinute(59).withSecond(59);
     }
 }
