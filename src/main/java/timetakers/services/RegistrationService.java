@@ -39,6 +39,9 @@ public class RegistrationService {
         if (signupDto.name.trim().isEmpty()) {
             throw new ValidationRuntimeException(new TextKey("validation.notEmpty"), "name");
         }
+        if (userRepository.findByUserName(signupDto.username) != null) {
+            throw new ValidationRuntimeException(new TextKey("validation.usernameAlreadyExists"), "username");
+        }
         Person person = Person.builder().setName(signupDto.name.trim()).setFirstname(signupDto.firstname.trim()).createPerson();
         personRepository.save(person);
         User user = User.builder().setPerson(person).setUserName(signupDto.username.trim()).setPassword(signupDto.password.trim()).createUser();
