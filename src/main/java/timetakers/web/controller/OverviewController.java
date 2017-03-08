@@ -56,7 +56,7 @@ public class OverviewController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getSummaryOfRecords(@RequestParam DateRange dateRange) {
+    public ModelAndView getSummaryOfRecords(@RequestParam(required = false) DateRange dateRange) {
         ModelAndView modelAndView = new ModelAndView("overview");
 
         List<LocalDateTime> dates = getDatesForDateRange(dateRange);
@@ -84,6 +84,11 @@ public class OverviewController {
     private static List<LocalDateTime> getDatesForDateRange(DateRange dateRange) {
         List<LocalDateTime> result = new ArrayList<>(2);
         LocalDateTime today = LocalDateTime.now(Clock.systemUTC());
+
+        if (dateRange == null) {
+            dateRange = DateRange.TODAY;
+        }
+
         switch (dateRange) {
             case TODAY:
                 result.add(today);

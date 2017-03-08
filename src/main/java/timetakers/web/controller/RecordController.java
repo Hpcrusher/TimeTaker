@@ -92,9 +92,9 @@ public class RecordController {
         return recordAssembler.toResource(record);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteRecord( @RequestParam UUID id ) {
+    public void deleteRecord( @PathVariable UUID id ) {
         recordRepository.delete(id);
     }
 
